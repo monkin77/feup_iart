@@ -4,7 +4,11 @@ class Street:
         self.startIntersection = startIntersection
         self.endIntersection = endIntersection
         self.name = name
-        self.timeToCross = timeToCross  
+        self.timeToCross = timeToCross
+        self.waitingQueue = []
 
     def __str__(self):
         return "Street-" + str(self.id)
+
+    def addCar(self, car):
+        self.waitingQueue.append(car)

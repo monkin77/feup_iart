@@ -19,20 +19,43 @@ def readInput(fileName):
         startIntersectionId = int(lines[i][0])
         endIntersectionId = int(lines[i][1])
         streetName = lines[i][2]
-        timeToCross = lines[i][3]
+        timeToCross = int(lines[i][3])
 
-        streets[streetName] = Street(
+
+        newStreet = Street(
             i - 1,
             intersections[startIntersectionId],
             intersections[endIntersectionId],
             streetName,
             timeToCross
         )
+        streets[streetName] = newStreet
+
+        intersections[startIntersectionId].addOutgoingStreet(newStreet)
+        intersections[endIntersectionId].addIncomingStreet(newStreet)
 
     for i in range(numStreets + 1, numStreets + numCars + 1):
+        car = cars[i - numStreets - 1]
         numPathStreets = int(lines[i][0])
         for j in range(1, numPathStreets + 1):
             streetName = lines[i][j]
-            cars[i - numStreets - 1].streets.append(streets[streetName])
+            car.streets.append(streets[streetName])
+        firstStreetName = lines[i][1]
+        streets[firstStreetName].addCar(car)
 
     return (intersections, cars, streets.values(), totalTime, score)
+
+
+def writeOutput(fileName, intersections, cars, streets):
+    f = open(fileName, "w")
+
+    f.write(str(len(intersections)) + "\n")
+    for intersection in intersections:
+        f.write(str(intersection.id) + "\n")
+        f.write(str(len(intersection.incomingStreets)) + "\n")
+
+        for (idx, incStreet) in enumerate(intersection.incomingStreets):
+            f.write(incStreet.name + " " + str(intersection.semaphores[idx]) + "\n")
+
+
+    f.close()
