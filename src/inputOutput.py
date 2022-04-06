@@ -55,8 +55,8 @@ def writeOutput(fileName, intersections):
         f.write(str(intersection.id) + "\n")
         f.write(str(len(intersection.incomingStreets)) + "\n")
 
-        for (idx, incStreet) in enumerate(intersection.incomingStreets):
-            f.write(incStreet.name + " " + str(intersection.semaphores[idx]) + "\n")
+        for incStreet in intersection.incomingStreets:
+            f.write(incStreet[0].name + " " + str(incStreet[1]) + "\n")
 
 
     f.close()

@@ -3,22 +3,20 @@ class Intersection:
         self.id = id
         self.outgoingStreets = []
         self.incomingStreets = []
-        self.semaphores = []
         self.cars = []
 
     def __str__(self):
         return "Intersection-" + str(self.id)
 
     def addIncomingStreet(self, street):
-        self.incomingStreets.append(street)
-        self.semaphores.append(0)
+        self.incomingStreets.append((street, 0))
 
     def addOutgoingStreet(self, street):
         self.outgoingStreets.append(street)
 
     def changeSemaphore(self, id, time):
-        self.semaphores[id] = time
+        self.incomingStreets[id][1] = time
 
     def changeAllSemaphores(self, time):
-        for i in range(len(self.semaphores)):
+        for i in range(len(self.incomingStreets)):
             self.changeSemaphore(i, time)

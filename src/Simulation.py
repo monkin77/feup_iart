@@ -11,7 +11,7 @@ class Simulation:
         points = 0
         for second in range(self.maxTime):
             for intersection in self.intersections:
-                totalSemaphoreTime = reduce(lambda i1, i2: i1+i2, intersection.semaphores)  # Could be a property of Intersection
+                totalSemaphoreTime = reduce(lambda acc, i2: acc+i2[1], intersection.incomingStreets, 0)  # Could be a property of Intersection
                 if totalSemaphoreTime == 0:
                     currIterTime = 0
                 else:
@@ -19,14 +19,14 @@ class Simulation:
                 timeCounter = 0
 
                 greenSemaphoreIdx = -1
-                for (idx, sem) in enumerate(intersection.semaphores):
-                    timeCounter += sem
+                for (idx, street) in enumerate(intersection.incomingStreets):
+                    timeCounter += street[1]
                     if timeCounter >= currIterTime:
                         greenSemaphoreIdx = idx
                         break
 
                 if greenSemaphoreIdx >= 0:
-                    street = intersection.incomingStreets[greenSemaphoreIdx]
+                    street = intersection.incomingStreets[greenSemaphoreIdx][0]
                     if len(street.waitingQueue) > 0:
                         car = street.waitingQueue.pop(0)
 

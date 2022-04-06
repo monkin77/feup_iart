@@ -12,6 +12,7 @@ if __name__ == "__main__":
     (intersections, cars, maxTime, bonusPoints) = readInput(inputFile)
 
     solution = Solution(intersections)
+    solution.removeUnusedStreets()
     simulation = Simulation(intersections, cars, maxTime, bonusPoints)
     result = simulation.eval()
     print("Total evaluation:", result)
