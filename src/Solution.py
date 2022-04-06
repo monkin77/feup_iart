@@ -11,4 +11,3 @@ class Solution:
             intersection.incomingStreets = [
                 street for street in intersection.incomingStreets if street[0].carUsageCount != 0
             ]
-
