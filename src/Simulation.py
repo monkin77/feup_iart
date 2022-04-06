@@ -1,10 +1,9 @@
 from functools import reduce
 
 class Simulation:
-    def __init__(self, intersections, cars, streets, maxTime, bonusPoints):
+    def __init__(self, intersections, cars, maxTime, bonusPoints):
         self.intersections = intersections
         self.cars = cars
-        self.streets = streets
         self.maxTime = maxTime
         self.bonusPoints = bonusPoints
 

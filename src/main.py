@@ -1,25 +1,20 @@
 from inputOutput import readInput, writeOutput
 from Simulation import Simulation
+from Solution import Solution
 
-INPUT_FILE = "../input/a.txt"
+INPUT_FOLDER = "../input/"
+OUTPUT_FOLDER = "../output/"
 
 if __name__ == "__main__":
-    (intersections, cars, streets, maxTime, bonusPoints) = readInput(INPUT_FILE)
+    inputFile = INPUT_FOLDER + input("Select your input file: ")
+    outputFile = OUTPUT_FOLDER + input("Select your output file: ")
 
-    '''
-    for inters in intersections:
-        print(inters)
-    for car in cars:
-        print(car)
-    for street in streets:
-        print(street)
-    print(maxTime, bonusPoints)
-    '''
+    (intersections, cars, maxTime, bonusPoints) = readInput(inputFile)
 
-
-    simulation = Simulation(intersections, cars, streets, maxTime, bonusPoints)
+    solution = Solution(intersections)
+    simulation = Simulation(intersections, cars, maxTime, bonusPoints)
     result = simulation.eval()
     print("Total evaluation:", result)
 
-    writeOutput('out.txt', intersections, cars, streets)
+    writeOutput(outputFile, intersections)
 

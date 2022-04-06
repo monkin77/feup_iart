@@ -11,7 +11,14 @@ class Intersection:
 
     def addIncomingStreet(self, street):
         self.incomingStreets.append(street)
-        self.semaphores.append(1)
+        self.semaphores.append(0)
 
     def addOutgoingStreet(self, street):
         self.outgoingStreets.append(street)
+
+    def changeSemaphore(self, id, time):
+        self.semaphores[id] = time
+
+    def changeAllSemaphores(self, time):
+        for i in range(len(self.semaphores)):
+            self.changeSemaphore(i, time)

@@ -6,6 +6,7 @@ class Street:
         self.name = name
         self.timeToCross = timeToCross
         self.waitingQueue = []
+        self.carUsageCount = 0
 
     def __str__(self):
         return "Street-" + str(self.id)

@@ -40,13 +40,14 @@ def readInput(fileName):
         for j in range(1, numPathStreets + 1):
             streetName = lines[i][j]
             car.streets.append(streets[streetName])
+            streets[streetName].carUsageCount += 1
         firstStreetName = lines[i][1]
         streets[firstStreetName].addCar(car)
 
-    return (intersections, cars, streets.values(), totalTime, score)
+    return (intersections, cars, totalTime, score)
 
 
-def writeOutput(fileName, intersections, cars, streets):
+def writeOutput(fileName, intersections):
     f = open(fileName, "w")
 
     f.write(str(len(intersections)) + "\n")
