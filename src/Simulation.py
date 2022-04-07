@@ -1,5 +1,3 @@
-from functools import reduce
-
 class Simulation:
     def __init__(self, intersections, cars, maxTime, bonusPoints):
         self.intersections = intersections
@@ -11,11 +9,10 @@ class Simulation:
         points = 0
         for second in range(self.maxTime):
             for intersection in self.intersections:
-                totalSemaphoreTime = reduce(lambda acc, i2: acc+i2[1], intersection.incomingStreets, 0)  # Could be a property of Intersection
-                if totalSemaphoreTime == 0:
+                if intersection.semaphoreCycleTime == 0:
                     currIterTime = 0
                 else:
-                    currIterTime = (second % totalSemaphoreTime) + 1
+                    currIterTime = (second % intersection.semaphoreCycleTime) + 1
                 timeCounter = 0
 
                 greenSemaphoreIdx = -1
