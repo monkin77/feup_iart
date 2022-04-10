@@ -22,6 +22,7 @@ class Solution:
         curSolution = self.copyIntersections(self.intersections)
         curScore = self.simulation.eval(curSolution)
         iterationCounter = 0
+        
 
         while iterationCounter < maxNumIterations:
             neighbourSolution = self.copyIntersections(curSolution)

@@ -2,7 +2,7 @@ import random
 from functools import reduce
 
 class Intersection:
-    def __init__(self, id, outgoingStreets = [], incomingStreets = [], semaphoreCycleTime = 0):
+    def __init__(self, id, outgoingStreets, incomingStreets, semaphoreCycleTime):
         self.id = id
         self.outgoingStreets = outgoingStreets
         self.incomingStreets = incomingStreets
