@@ -1,7 +1,7 @@
 class Car:
-    def __init__(self, id):
+    def __init__(self, id, streets):
         self.id = id
-        self.streets = []
+        self.streets = streets
         self.currStreet = 0
         self.remainingCrossingTime = 0
 

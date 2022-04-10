@@ -2,8 +2,10 @@ from Model.Intersection import Intersection
 from Model.Car import Car
 from Model.Street import Street
 
+
 def readInput(fileName):
-    lines = [line.strip().split(' ') for line in open(fileName, "r").readlines()]
+    lines = [line.strip().split(' ')
+             for line in open(fileName, "r").readlines()]
 
     totalTime = int(lines[0][0])
     numIntersections = int(lines[0][1])
@@ -11,8 +13,9 @@ def readInput(fileName):
     numCars = int(lines[0][3])
     score = int(lines[0][4])
 
-    intersections = [Intersection(id, [], [], 0) for id in range(numIntersections)]
-    cars = [Car(id) for id in range(numCars)]
+    intersections = [Intersection(id, [], [], 0)
+                     for id in range(numIntersections)]
+    cars = [Car(id, []) for id in range(numCars)]
     streets = {}
 
     for i in range(1, numStreets + 1):
@@ -20,7 +23,6 @@ def readInput(fileName):
         endIntersectionId = int(lines[i][1])
         streetName = lines[i][2]
         timeToCross = int(lines[i][3])
-
 
         newStreet = Street(
             i - 1,
@@ -57,6 +59,5 @@ def writeOutput(fileName, intersections):
 
         for incStreet in intersection.incomingStreets:
             f.write(incStreet[0].name + " " + str(incStreet[1]) + "\n")
-
 
     f.close()
