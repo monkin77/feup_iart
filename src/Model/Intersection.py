@@ -27,9 +27,8 @@ class Intersection:
             self._changeSemaphore(i, time)
         self.semaphoreCycleTime = reduce(lambda acc, i2: acc + i2[1], self.incomingStreets, 0)
 
-    def incrementSemaphoreTime(self, idx, time):
-        self.incomingStreets[idx][1] += time
-        self.semaphoreCycleTime += time
+    def swapLights(self, idx1, idx2):
+        self.incomingStreets[idx1], self.incomingStreets[idx2] = self.incomingStreets[idx2], self.incomingStreets[idx1]
 
     def swapLightsMutation(self):
         if len(self.incomingStreets <= 1):
@@ -39,22 +38,29 @@ class Intersection:
         while idx2 == idx1:
             idx2 = random.randint(0, len(self.incomingStreets) - 1)
 
-        self.incomingStreets[idx1], self.incomingStreets[idx2] = self.incomingStreets[idx2], self.incomingStreets[idx1]
+        self.swapLights(idx1, idx2)
+
+    def switchLightPos(self, idx, newIdx):
+        street = self.incomingStreets.pop(idx)
+        self.incomingStreets.insert(newIdx, street)
 
     def switchLightPosMutation(self):
         if len(self.incomingStreets <= 1):
             return
         
-        idx1 = newIdx = random.randint(0, len(self.incomingStreets) - 1)
-        while newIdx == idx1:
+        idx = newIdx = random.randint(0, len(self.incomingStreets) - 1)
+        while newIdx == idx:
             newIdx = random.randint(0, len(self.incomingStreets) - 1)
 
-        street = self.incomingStreets.pop(idx1)
-        self.incomingStreets.insert(newIdx, street)
+        self.switchLightPos(idx, newIdx)
+
+    def changeLightTime(self, idx, time):
+        self.incomingStreets[idx][1] += time
+        self.semaphoreCycleTime += time
 
     def changeLightTimeMutation(self):
         idx = random.randint(0, len(self.incomingStreets) - 1)
-
         minTime = max(-10, 0 - self.incomingStreets[idx][1])
         time = random.choice([i for i in range(minTime, 11) if i != 0])
-        self.incrementSemaphoreTime(idx, time)
+
+        self.changeLightTime(idx, time)
