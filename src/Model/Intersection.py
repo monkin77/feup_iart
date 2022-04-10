@@ -2,12 +2,17 @@ import random
 from functools import reduce
 
 class Intersection:
-    def __init__(self, id):
+    def __init__(self, id, outgoingStreets = [], incomingStreets = [], semaphoreCycleTime = 0):
         self.id = id
-        self.outgoingStreets = []
-        self.incomingStreets = []
-        self.semaphoreCycleTime = 0
-        self.cars = []
+        self.outgoingStreets = outgoingStreets
+        self.incomingStreets = incomingStreets
+        self.semaphoreCycleTime = semaphoreCycleTime
+
+        self.mutationFunctions = [
+            self.swapLightsMutation,
+            self.switchLightPosMutation,
+            self.changeLightTimeMutation
+        ]
 
     def __str__(self):
         return "Intersection-" + str(self.id)
@@ -20,7 +25,8 @@ class Intersection:
 
     # THIS CANNOT BE USED ALONE (Not updating the semaphoreCycleTime)
     def _changeSemaphore(self, id, time):
-        self.incomingStreets[id][1] = time
+        oldStreet = self.incomingStreets[id]
+        self.incomingStreets[id] = (oldStreet[0], time)
 
     def changeAllSemaphores(self, time):
         for i in range(len(self.incomingStreets)):
@@ -31,7 +37,7 @@ class Intersection:
         self.incomingStreets[idx1], self.incomingStreets[idx2] = self.incomingStreets[idx2], self.incomingStreets[idx1]
 
     def swapLightsMutation(self):
-        if len(self.incomingStreets <= 1):
+        if len(self.incomingStreets) <= 1:
             return
 
         idx1 = idx2 = random.randint(0, len(self.incomingStreets) - 1)
@@ -45,7 +51,7 @@ class Intersection:
         self.incomingStreets.insert(newIdx, street)
 
     def switchLightPosMutation(self):
-        if len(self.incomingStreets <= 1):
+        if len(self.incomingStreets) <= 1:
             return
         
         idx = newIdx = random.randint(0, len(self.incomingStreets) - 1)
@@ -55,7 +61,8 @@ class Intersection:
         self.switchLightPos(idx, newIdx)
 
     def changeLightTime(self, idx, time):
-        self.incomingStreets[idx][1] += time
+        oldStreet = self.incomingStreets[idx]
+        self.incomingStreets[idx] = (oldStreet[0], oldStreet[1] + time)
         self.semaphoreCycleTime += time
 
     def changeLightTimeMutation(self):
@@ -64,3 +71,7 @@ class Intersection:
         time = random.choice([i for i in range(minTime, 11) if i != 0])
 
         self.changeLightTime(idx, time)
+
+    def randomMutation(self):
+        idx = random.randint(0, len(self.mutationFunctions) - 1)
+        self.mutationFunctions[idx]()

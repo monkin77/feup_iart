@@ -10,13 +10,14 @@ if __name__ == "__main__":
     outputFile = OUTPUT_FOLDER + "out.txt"# input("Select your output file: ")
 
     (intersections, cars, maxTime, bonusPoints) = readInput(inputFile)
+    simulation = Simulation(cars, maxTime, bonusPoints)
 
-    solution = Solution(intersections)
+    solution = Solution(intersections, simulation)
     solution.removeUnusedStreets()
+    solution.setInitialSolution()
+    finalScore = solution.hillClimbingBasicRandom(1)
     solution.show()
-    simulation = Simulation(intersections, cars, maxTime, bonusPoints)
-    result = simulation.eval()
-    print("Total evaluation:", result)
+    print("Final score = ", finalScore)
 
-    writeOutput(outputFile, intersections)
+    writeOutput(outputFile, solution.intersections)
 

@@ -1,14 +1,13 @@
 class Simulation:
-    def __init__(self, intersections, cars, maxTime, bonusPoints):
-        self.intersections = intersections
+    def __init__(self, cars, maxTime, bonusPoints):
         self.cars = cars
         self.maxTime = maxTime
         self.bonusPoints = bonusPoints
 
-    def eval(self):
+    def eval(self, intersections):
         points = 0
         for second in range(self.maxTime):
-            for intersection in self.intersections:
+            for intersection in intersections:
                 if intersection.semaphoreCycleTime == 0:
                     currIterTime = 0
                 else:
