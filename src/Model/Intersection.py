@@ -1,10 +1,12 @@
 import random
+from functools import reduce
 
 class Intersection:
     def __init__(self, id):
         self.id = id
         self.outgoingStreets = []
         self.incomingStreets = []
+        self.semaphoreCycleTime = 0
         self.cars = []
 
     def __str__(self):
@@ -16,12 +18,18 @@ class Intersection:
     def addOutgoingStreet(self, street):
         self.outgoingStreets.append(street)
 
-    def changeSemaphore(self, id, time):
+    # THIS CANNOT BE USED ALONE (Not updating the semaphoreCycleTime)
+    def _changeSemaphore(self, id, time):
         self.incomingStreets[id][1] = time
 
     def changeAllSemaphores(self, time):
         for i in range(len(self.incomingStreets)):
-            self.changeSemaphore(i, time)
+            self._changeSemaphore(i, time)
+        self.semaphoreCycleTime = reduce(lambda acc, i2: acc + i2[1], self.incomingStreets, 0)
+
+    def incrementSemaphoreTime(self, idx, time):
+        self.incomingStreets[idx][1] += time
+        self.semaphoreCycleTime += time
 
     def swapLightsMutation(self):
         if len(self.incomingStreets <= 1):
@@ -49,4 +57,4 @@ class Intersection:
 
         minTime = max(-10, 0 - self.incomingStreets[idx][1])
         time = random.choice([i for i in range(minTime, 11) if i != 0])
-        self.incomingStreets[idx][1] += time
+        self.incrementSemaphoreTime(idx, time)

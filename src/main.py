@@ -6,13 +6,14 @@ INPUT_FOLDER = "../input/"
 OUTPUT_FOLDER = "../output/"
 
 if __name__ == "__main__":
-    inputFile = INPUT_FOLDER + input("Select your input file: ")
-    outputFile = OUTPUT_FOLDER + input("Select your output file: ")
+    inputFile = INPUT_FOLDER + "a.txt"# input("Select your input file: ")
+    outputFile = OUTPUT_FOLDER + "out.txt"# input("Select your output file: ")
 
     (intersections, cars, maxTime, bonusPoints) = readInput(inputFile)
 
     solution = Solution(intersections)
     solution.removeUnusedStreets()
+    solution.show()
     simulation = Simulation(intersections, cars, maxTime, bonusPoints)
     result = simulation.eval()
     print("Total evaluation:", result)
