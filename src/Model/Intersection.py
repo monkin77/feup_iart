@@ -19,12 +19,12 @@ class Intersection:
         self.outgoingStreets.append(street)
 
     # THIS CANNOT BE USED ALONE (Not updating the semaphoreCycleTime)
-    def changeSemaphore(self, id, time):
+    def _changeSemaphore(self, id, time):
         self.incomingStreets[id][1] = time
 
     def changeAllSemaphores(self, time):
         for i in range(len(self.incomingStreets)):
-            self.changeSemaphore(i, time)
+            self._changeSemaphore(i, time)
         self.semaphoreCycleTime = reduce(lambda acc, i2: acc + i2[1], self.incomingStreets, 0)
 
     def incrementSemaphoreTime(self, idx, time):
