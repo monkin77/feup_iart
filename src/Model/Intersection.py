@@ -40,9 +40,8 @@ class Intersection:
         if len(self.incomingStreets) <= 1:
             return
 
-        idx1 = idx2 = random.randint(0, len(self.incomingStreets) - 1)
-        while idx2 == idx1:
-            idx2 = random.randint(0, len(self.incomingStreets) - 1)
+        idx1 = random.randint(0, len(self.incomingStreets) - 1)
+        idx2 = random.choice([i for i in range(0, len(self.incomingStreets)) if i != idx1])
 
         self.swapLights(idx1, idx2)
 
@@ -55,8 +54,7 @@ class Intersection:
             return
         
         idx = newIdx = random.randint(0, len(self.incomingStreets) - 1)
-        while newIdx == idx:
-            newIdx = random.randint(0, len(self.incomingStreets) - 1)
+        newIdx = random.choice([i for i in range(0, len(self.incomingStreets)) if i != idx])
 
         self.switchLightPos(idx, newIdx)
 
@@ -65,12 +63,14 @@ class Intersection:
         self.incomingStreets[idx] = (oldStreet[0], oldStreet[1] + time)
         self.semaphoreCycleTime += time
 
-    def changeLightTimeMutation(self):
-        idx = random.randint(0, len(self.incomingStreets) - 1)
+    def changeLightRandomTime(self, idx):
         minTime = max(-10, 0 - self.incomingStreets[idx][1])
         time = random.choice([i for i in range(minTime, 11) if i != 0])
-
         self.changeLightTime(idx, time)
+
+    def changeLightTimeMutation(self):
+        idx = random.randint(0, len(self.incomingStreets) - 1)
+        self.changeLightRandomTime(idx)
 
     def randomMutation(self):
         idx = random.randint(0, len(self.mutationFunctions) - 1)

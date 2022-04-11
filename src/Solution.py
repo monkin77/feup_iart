@@ -44,7 +44,54 @@ class Solution:
         self.intersections = curSolution
         return curScore
 
+    def hillClimbingSteepest(self):
+        curSolution = self.copyIntersections(self.intersections)
+        neighbourSolution = self.copyIntersections(curSolution)
+        curScore = self.simulation.eval(curSolution)
 
+        while True:
+            initialScore = curScore
+
+            for intersection in neighbourSolution:
+                for i in range(len(intersection.incomingStreets) - 1):
+                    for j in range(i + 1, len(intersection.incomingStreets)):
+                        intersection.swapLights(i, j)
+                        neighbourScore = self.simulation.eval(neighbourSolution)
+                        if (neighbourScore > curScore):
+                            curScore = neighbourScore
+                            curSolution = neighbourSolution
+
+                        neighbourSolution = self.copyIntersections(curSolution)
+
+            # Maybe change only one position at random, for efficiency
+            for intersection in neighbourSolution:
+                for i in range(len(intersection.incomingStreets)):
+                    for j in range(len(intersection.incomingStreets)):
+                        if (i == j):
+                            continue
+                        intersection.switchLightPos(i, j)
+                        neighbourScore = self.simulation.eval(neighbourSolution)
+                        if (neighbourScore > curScore):
+                            curScore = neighbourScore
+                            curSolution = neighbourSolution
+
+                        neighbourSolution = self.copyIntersections(curSolution)
+
+            for intersection in neighbourSolution:
+                for i in range(len(intersection.incomingStreets)):
+                    intersection.changeLightRandomTime(i)
+                    neighbourScore = self.simulation.eval(neighbourSolution)
+                    if (neighbourScore > curScore):
+                        curScore = neighbourScore
+                        curSolution = neighbourSolution
+
+                    neighbourSolution = self.copyIntersections(curSolution)
+
+            if curScore == initialScore:
+                break
+
+        self.intersections = curSolution
+        return curScore
 
     def show(self):
         for intersection in self.intersections:

@@ -16,9 +16,9 @@ if __name__ == "__main__":
     solution = Solution(intersections, simulation)
     solution.removeUnusedStreets()
     solution.setInitialSolution()
-    finalScore = solution.hillClimbingBasicRandom(100)
+    # finalScore = solution.hillClimbingBasicRandom(10)
+    finalScore = solution.hillClimbingSteepest()
     solution.show()
     print("Final score = ", finalScore)
-    # print("solution:", simulation.eval(solution.intersections))
 
     writeOutput(outputFile, solution.intersections)
