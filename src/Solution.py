@@ -18,11 +18,14 @@ class Solution:
                 street for street in intersection.incomingStreets if street[0].carUsageCount != 0
             ]
 
+        self.intersections = [
+            intersection for intersection in self.intersections if len(intersection.incomingStreets) != 0
+        ]
+
     def hillClimbingBasicRandom(self, maxNumIterations):
         curSolution = self.copyIntersections(self.intersections)
         curScore = self.simulation.eval(curSolution)
         iterationCounter = 0
-        
 
         while iterationCounter < maxNumIterations:
             neighbourSolution = self.copyIntersections(curSolution)
@@ -40,6 +43,8 @@ class Solution:
 
         self.intersections = curSolution
         return curScore
+
+
 
     def show(self):
         for intersection in self.intersections:
