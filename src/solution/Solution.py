@@ -1,8 +1,8 @@
 import math
 import random
 
-from Model.Intersection import Intersection
-from TabuSolution import TabuSolution
+from model.Intersection import Intersection
+from solution.TabuSolution import TabuSolution
 
 
 class Solution:

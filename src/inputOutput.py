@@ -1,6 +1,6 @@
-from Model.Intersection import Intersection
-from Model.Car import Car
-from Model.Street import Street
+from model.Intersection import Intersection
+from model.Car import Car
+from model.Street import Street
 
 
 def readInput(fileName):

@@ -1,13 +1,13 @@
 from inputOutput import readInput, writeOutput
 from Simulation import Simulation
-from Solution import Solution
-from coolingSchedule import *
+from solution.Solution import Solution
+from solution.coolingSchedule import *
 
 INPUT_FOLDER = "input/"
 OUTPUT_FOLDER = "output/"
 
 if __name__ == "__main__":
-    inputFile = INPUT_FOLDER + "f.txt"  # input("Select your input file: ")
+    inputFile = INPUT_FOLDER + "a.txt"  # input("Select your input file: ")
     
     outputFile = OUTPUT_FOLDER + "out.txt"  # input("Select your output file: ")
 
