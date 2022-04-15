@@ -1,6 +1,5 @@
 import math
 import random
-from tkinter.tix import Tree
 
 from Model.Intersection import Intersection
 from TabuSolution import TabuSolution
@@ -137,21 +136,23 @@ class Solution:
         self.intersections = curSolution
         return curScore
 
-    # TODO try startTenure = sqrt(N) and making it dynamic
-    def tabuSearch(self, startTenure, maxIter):
+    def tabuSearch(self, maxIter, candidateListSize):
+        # StartTenure = sqrt(N)
+        tenure = startTenure = math.floor(math.sqrt(len(self.intersections)))
+
         bestSolution = self.copyIntersections(self.intersections)
         bestScore = self.simulation.eval(bestSolution)
         candidateSolution = self.copyIntersections(bestSolution)
         candidateScore = bestScore
 
-        tabuList = [TabuSolution(bestSolution, startTenure)]
+        tabuList = [TabuSolution(bestSolution, tenure)]
         iterationCounter = 0
 
         # max iterations since last improvement
         while iterationCounter <= maxIter:
-            print(bestScore, iterationCounter)
+            print("score", bestScore, "iter", iterationCounter, "tenure", tenure)
 
-            neighbourhood = self.getCandidates(candidateSolution)
+            neighbourhood = self.getCandidates(candidateSolution, candidateListSize)
             for neighbour in neighbourhood:
                 isTabu = False
                 for tabu in tabuList:
@@ -171,22 +172,25 @@ class Solution:
                 bestSolution = candidateSolution
                 bestScore = candidateScore
                 iterationCounter = 0
+                # No stagnation, return to startTenure
+                tenure = startTenure
             else:
                 iterationCounter += 1
+                # Increase tenure when detecting stagnation
+                tenure += 1
 
-            # update tabuList
+            # Update tabuList
             for tabu in tabuList:
                 tabu.tenure -= 1
             tabuList = list(filter(lambda t: t.tenure > 0, tabuList))
-            tabuList.append(TabuSolution(candidateSolution, startTenure))
+            tabuList.append(TabuSolution(candidateSolution, tenure))
 
         self.intersections = bestSolution
         return bestScore
 
-    def getCandidates(self, solution):
+    def getCandidates(self, solution, candidateListSize):
         candidates = []
-        # Generate 10 neighbours TODO parameter
-        for _ in range(10):
+        for _ in range(candidateListSize):
             newCandidate = self.copyIntersections(solution)
             random.choice(newCandidate).randomMutation() # Random neighbour
             candidates.append(newCandidate)

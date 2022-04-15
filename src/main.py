@@ -7,7 +7,7 @@ INPUT_FOLDER = "input/"
 OUTPUT_FOLDER = "output/"
 
 if __name__ == "__main__":
-    inputFile = INPUT_FOLDER + "e.txt"  # input("Select your input file: ")
+    inputFile = INPUT_FOLDER + "f.txt"  # input("Select your input file: ")
     
     outputFile = OUTPUT_FOLDER + "out.txt"  # input("Select your output file: ")
 
@@ -20,7 +20,7 @@ if __name__ == "__main__":
     # finalScore = solution.hillClimbingBasicRandom(1000)
     # finalScore = solution.hillClimbingSteepest()
     # finalScore = solution.simulatedAnnealing(100, 0.85, 10, exponentialCooling)
-    finalScore = solution.tabuSearch(10, 100)
+    finalScore = solution.tabuSearch(100, 10)
     solution.show()
     print("Final score = ", finalScore)
 
