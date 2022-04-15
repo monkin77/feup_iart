@@ -1,7 +1,9 @@
 import math
 import random
+from tkinter.tix import Tree
 
 from Model.Intersection import Intersection
+from TabuSolution import TabuSolution
 
 
 class Solution:
@@ -134,6 +136,62 @@ class Solution:
 
         self.intersections = curSolution
         return curScore
+
+    # TODO try startTenure = sqrt(N) and making it dynamic
+    def tabuSearch(self, startTenure, maxIter):
+        bestSolution = self.copyIntersections(self.intersections)
+        bestScore = self.simulation.eval(bestSolution)
+        candidateSolution = self.copyIntersections(bestSolution)
+        candidateScore = bestScore
+
+        tabuList = [TabuSolution(bestSolution, startTenure)]
+        iterationCounter = 0
+
+        # max iterations since last improvement
+        while iterationCounter <= maxIter:
+            print(bestScore, iterationCounter)
+
+            neighbourhood = self.getCandidates(candidateSolution)
+            for neighbour in neighbourhood:
+                isTabu = False
+                for tabu in tabuList:
+                    if tabu.isSolutionTabu(neighbour):
+                        print("Tabu!")
+                        isTabu = True
+                        break
+                if isTabu:
+                    continue
+
+                neighbourScore = self.simulation.eval(neighbour)
+                if neighbourScore > candidateScore:
+                    candidateSolution = neighbour
+                    candidateScore = neighbourScore
+
+            if candidateScore > bestScore:
+                bestSolution = candidateSolution
+                bestScore = candidateScore
+                iterationCounter = 0
+            else:
+                iterationCounter += 1
+
+            # update tabuList
+            for tabu in tabuList:
+                tabu.tenure -= 1
+            tabuList = list(filter(lambda t: t.tenure > 0, tabuList))
+            tabuList.append(TabuSolution(candidateSolution, startTenure))
+
+        self.intersections = bestSolution
+        return bestScore
+
+    def getCandidates(self, solution):
+        candidates = []
+        # Generate 10 neighbours TODO parameter
+        for _ in range(10):
+            newCandidate = self.copyIntersections(solution)
+            random.choice(newCandidate).randomMutation() # Random neighbour
+            candidates.append(newCandidate)
+
+        return candidates
 
     def show(self):
         for intersection in self.intersections:
