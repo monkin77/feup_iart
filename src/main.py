@@ -1,6 +1,7 @@
 from inputOutput import readInput, writeOutput
 from Simulation import Simulation
 from Solution import Solution
+from coolingSchedule import *
 
 INPUT_FOLDER = "input/"
 OUTPUT_FOLDER = "output/"
@@ -16,8 +17,9 @@ if __name__ == "__main__":
     solution = Solution(intersections, simulation)
     solution.removeUnusedStreets()
     solution.setInitialSolution()
-    # finalScore = solution.hillClimbingBasicRandom(10)
-    finalScore = solution.hillClimbingSteepest()
+    # finalScore = solution.hillClimbingBasicRandom(1000)
+    # finalScore = solution.hillClimbingSteepest()
+    finalScore = solution.simulatedAnnealing(100, 0.85, 10, exponentialCooling)
     solution.show()
     print("Final score = ", finalScore)
 
