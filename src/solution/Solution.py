@@ -3,10 +3,10 @@ import random
 
 from model.Intersection import Intersection
 from solution.TabuSolution import TabuSolution
-
+import Simulation
 
 class Solution:
-    def __init__(self, intersections, simulation):
+    def __init__(self, intersections, simulation : Simulation):
         self.intersections = intersections
         self.simulation = simulation
 
@@ -203,8 +203,8 @@ class Solution:
         for intersection in self.intersections:
             print("|| Intersection " + str(intersection.id) + " ||")
             semString = "["
-            for (_, semaphore) in intersection.incomingStreets:
-                semString += str(semaphore) + ", "
+            for (street, semaphore) in intersection.incomingStreets:
+                semString += street.name + "-" + str(semaphore) + ", "
             semString = semString[:-2]  # remove last 2 characters
             semString += "]"
             print(semString)
