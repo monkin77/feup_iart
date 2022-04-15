@@ -75,6 +75,7 @@ class Simulation:
 
         points = 0
         for second in range(self.maxTime):
+            changedIntersections = {}
             for car in cars:
                 # go through the street
                 if car.remainingCrossingTime > 0:
@@ -92,6 +93,10 @@ class Simulation:
                     # get street and intersection where the car is
                     currStreet = car.streets[car.currStreet]
                     currIntersection = intersectionsMap[currStreet.endIntersection.id]
+
+                    # already passed a car on this intersection semaphore
+                    if currIntersection.id in changedIntersections:
+                        continue
 
                     # get current time of the semaphore cycle
                     if currIntersection.semaphoreCycleTime == 0:
@@ -119,6 +124,7 @@ class Simulation:
                                 carId = waitingQueue[0]
                                 if car.id == carId:
                                     waitingQueue.pop(0)
+                                    changedIntersections[currIntersection.id] = True
                                     print("Car", car.id, "went through street", currStreet.name, " at ", second)
                                     car.currStreet += 1
                                     car.remainingCrossingTime = car.streets[car.currStreet].timeToCross - 1
