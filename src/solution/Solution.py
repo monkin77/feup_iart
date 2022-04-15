@@ -26,7 +26,7 @@ class Solution:
 
     def hillClimbingBasicRandom(self, maxNumIterations):
         curSolution = self.copyIntersections(self.intersections)
-        curScore = self.simulation.eval(curSolution)
+        curScore = self.simulation.eval2(curSolution)
         iterationCounter = 0
 
         while iterationCounter < maxNumIterations:
@@ -35,7 +35,7 @@ class Solution:
             for intersection in neighbourSolution: # Random neighbour
                 intersection.randomMutation()
 
-            neighbourScore = self.simulation.eval(neighbourSolution)
+            neighbourScore = self.simulation.eval2(neighbourSolution)
             if curScore < neighbourScore:
                 curSolution = neighbourSolution
                 curScore = neighbourScore
@@ -63,7 +63,8 @@ class Solution:
                         intersection = neighbourSolution[intersectionIdx]
 
                         intersection.swapLights(i, j)
-                        neighbourScore = self.simulation.eval(neighbourSolution)
+                        neighbourScore = self.simulation.eval(
+                            neighbourSolution)
                         if (neighbourScore > curScore):
                             curScore = neighbourScore
                             curSolution = neighbourSolution
@@ -80,7 +81,8 @@ class Solution:
                         intersection = neighbourSolution[intersectionIdx]
 
                         intersection.switchLightPos(i, j)
-                        neighbourScore = self.simulation.eval(neighbourSolution)
+                        neighbourScore = self.simulation.eval(
+                            neighbourSolution)
                         if (neighbourScore > curScore):
                             curScore = neighbourScore
                             curSolution = neighbourSolution
