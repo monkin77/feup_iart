@@ -13,7 +13,7 @@ def readInput(fileName):
     numCars = int(lines[0][3])
     score = int(lines[0][4])
 
-    intersections = [Intersection(id, [], [], 0)
+    intersections = [Intersection(id, [], [], 0, totalTime)
                      for id in range(numIntersections)]
     cars = [Car(id, []) for id in range(numCars)]
     streets = {}

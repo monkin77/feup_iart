@@ -2,11 +2,12 @@ import random
 from functools import reduce
 
 class Intersection:
-    def __init__(self, id, outgoingStreets, incomingStreets, semaphoreCycleTime):
+    def __init__(self, id, outgoingStreets, incomingStreets, semaphoreCycleTime, simulationTime):
         self.id = id
         self.outgoingStreets = outgoingStreets
         self.incomingStreets = incomingStreets
         self.semaphoreCycleTime = semaphoreCycleTime
+        self.simulationTime = simulationTime
 
         self.mutationFunctions = [
             self.swapLightsMutation,
@@ -65,7 +66,8 @@ class Intersection:
 
     def changeLightRandomTime(self, idx):
         minTime = max(-10, 0 - self.incomingStreets[idx][1])
-        time = random.choice([i for i in range(minTime, 11) if i != 0])
+        maxTime = min(10, self.simulationTime - self.incomingStreets[idx][1])
+        time = random.choice([i for i in range(minTime, maxTime + 1) if i != 0])
         self.changeLightTime(idx, time)
 
     def changeLightTimeMutation(self):

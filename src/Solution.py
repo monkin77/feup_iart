@@ -1,4 +1,4 @@
-from copy import deepcopy
+import math
 import random
 
 from Model.Intersection import Intersection
@@ -31,7 +31,7 @@ class Solution:
         while iterationCounter < maxNumIterations:
             neighbourSolution = self.copyIntersections(curSolution)
 
-            for intersection in neighbourSolution:
+            for intersection in neighbourSolution: # Random neighbour
                 intersection.randomMutation()
 
             neighbourScore = self.simulation.eval(neighbourSolution)
@@ -105,6 +105,36 @@ class Solution:
         self.intersections = curSolution
         return curScore
 
+    def simulatedAnnealing(self, t0, alpha, precision, coolingSchedule):
+        curSolution = self.copyIntersections(self.intersections)
+        curScore = self.simulation.eval(curSolution)
+        iterationCounter = 0
+
+        while True:
+            temperature = coolingSchedule(t0, alpha, iterationCounter)
+            if round(temperature, precision) == 0:
+                break
+            iterationCounter += 1
+
+            neighbourSolution = self.copyIntersections(curSolution)
+
+            random.choice(neighbourSolution).randomMutation() # Random neighbour
+            neighbourScore = self.simulation.eval(neighbourSolution)
+
+            diff = neighbourScore - curScore
+
+            if diff > 0:
+                curSolution = neighbourSolution
+                curScore = neighbourScore
+            else:
+                probability = math.e ** (diff / temperature)
+                if random.random() <= probability:
+                    curSolution = neighbourSolution
+                    curScore = neighbourScore
+
+        self.intersections = curSolution
+        return curScore
+
     def show(self):
         for intersection in self.intersections:
             print("|| Intersection " + str(intersection.id) + " ||")
@@ -121,7 +151,8 @@ class Solution:
                 obj.id,
                 [street for street in obj.outgoingStreets],
                 [street for street in obj.incomingStreets],
-                obj.semaphoreCycleTime
+                obj.semaphoreCycleTime,
+                obj.simulationTime
             ) for obj in intersections
         ]
 
