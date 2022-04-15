@@ -3,6 +3,7 @@ import random
 
 from Model.Intersection import Intersection
 
+
 class Solution:
     def __init__(self, intersections, simulation):
         self.intersections = intersections
@@ -46,47 +47,58 @@ class Solution:
 
     def hillClimbingSteepest(self):
         curSolution = self.copyIntersections(self.intersections)
-        neighbourSolution = self.copyIntersections(curSolution)
+        iterationSolution = self.copyIntersections(curSolution)
         curScore = self.simulation.eval(curSolution)
 
         while True:
             initialScore = curScore
 
-            for intersection in neighbourSolution:
-                for i in range(len(intersection.incomingStreets) - 1):
-                    for j in range(i + 1, len(intersection.incomingStreets)):
+            # Tries to find the best swap to the current iteration solution
+            for intersectionIdx in range(len(iterationSolution)):
+                iterIntersection = iterationSolution[intersectionIdx]
+                for i in range(len(iterIntersection.incomingStreets) - 1):
+                    for j in range(i + 1, len(iterIntersection.incomingStreets)):
+                        neighbourSolution = self.copyIntersections(iterationSolution)
+                        intersection = neighbourSolution[intersectionIdx]
+
                         intersection.swapLights(i, j)
                         neighbourScore = self.simulation.eval(neighbourSolution)
                         if (neighbourScore > curScore):
                             curScore = neighbourScore
                             curSolution = neighbourSolution
 
-                        neighbourSolution = self.copyIntersections(curSolution)
-
             # Maybe change only one position at random, for efficiency
-            for intersection in neighbourSolution:
-                for i in range(len(intersection.incomingStreets)):
-                    for j in range(len(intersection.incomingStreets)):
+            # Tries to find the best swap to the current iteration solution
+            for intersectionIdx in range(len(iterationSolution)):
+                iterIntersection = iterationSolution[intersectionIdx]
+                for i in range(len(iterIntersection.incomingStreets)):
+                    for j in range(len(iterIntersection.incomingStreets)):
                         if (i == j):
                             continue
+                        neighbourSolution = self.copyIntersections(iterationSolution)
+                        intersection = neighbourSolution[intersectionIdx]
+
                         intersection.switchLightPos(i, j)
                         neighbourScore = self.simulation.eval(neighbourSolution)
                         if (neighbourScore > curScore):
                             curScore = neighbourScore
                             curSolution = neighbourSolution
 
-                        neighbourSolution = self.copyIntersections(curSolution)
-
-            for intersection in neighbourSolution:
+            # Tries to find a better solution by changing semaphore's time and using them if they improve the solution
+            neighbourSolution = self.copyIntersections(iterationSolution)
+            for intersectionIdx in range(len(iterationSolution)):
+                intersection = neighbourSolution[intersectionIdx]
                 for i in range(len(intersection.incomingStreets)):
                     intersection.changeLightRandomTime(i)
                     neighbourScore = self.simulation.eval(neighbourSolution)
                     if (neighbourScore > curScore):
                         curScore = neighbourScore
                         curSolution = neighbourSolution
+                        neighbourSolution = self.copyIntersections(curSolution)
+                    else:
+                        neighbourSolution = self.copyIntersections(iterationSolution)
 
-                    neighbourSolution = self.copyIntersections(curSolution)
-
+            iterationSolution = curSolution
             if curScore == initialScore:
                 break
 
