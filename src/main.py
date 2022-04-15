@@ -7,7 +7,7 @@ INPUT_FOLDER = "input/"
 OUTPUT_FOLDER = "output/"
 
 if __name__ == "__main__":
-    inputFile = INPUT_FOLDER + "a.txt"  # input("Select your input file: ")
+    inputFile = INPUT_FOLDER + "e.txt"  # input("Select your input file: ")
 
     # input("Select your output file: ")
     outputFile = OUTPUT_FOLDER + "out.txt"

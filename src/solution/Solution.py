@@ -42,14 +42,15 @@ class Solution:
                 iterationCounter = 0
             else:
                 iterationCounter += 1
+            print("Basic Climb iteration with: ", curScore, " points")
 
         self.intersections = curSolution
         return curScore
 
     def hillClimbingSteepest(self):
         curSolution = self.copyIntersections(self.intersections)
-        iterationSolution = self.copyIntersections(curSolution)
-        curScore = self.simulation.eval(curSolution)
+        neighbourSolution = self.copyIntersections(curSolution)
+        curScore = self.simulation.eval2(curSolution)
 
         while True:
             initialScore = curScore
@@ -63,7 +64,7 @@ class Solution:
                         intersection = neighbourSolution[intersectionIdx]
 
                         intersection.swapLights(i, j)
-                        neighbourScore = self.simulation.eval(
+                        neighbourScore = self.simulation.eval2(
                             neighbourSolution)
                         if (neighbourScore > curScore):
                             curScore = neighbourScore
@@ -104,6 +105,8 @@ class Solution:
             iterationSolution = curSolution
             if curScore == initialScore:
                 break
+            print("\nSteepest Climb iteration with: ", curScore, " points")
+
 
         self.intersections = curSolution
         return curScore

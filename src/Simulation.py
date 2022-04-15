@@ -19,7 +19,7 @@ class Simulation:
 
         points = 0
         for second in range(self.maxTime + 1):
-
+            print("second", second)
             for intersection in intersections:
                 if intersection.semaphoreCycleTime == 0:
                     currIterTime = 0
@@ -62,12 +62,15 @@ class Simulation:
 
     def eval2(self, intersections):
         waitingQueues = {}  # Stores car Ids
+        intersectionsMap = {}
 
         for intersection in intersections:
+            intersectionsMap[intersection.id] = intersection
             for street in intersection.incomingStreets:
                 waitingQueues[street[0].id] = [
                     car.id for car in street[0].waitingQueue
                 ]
+
         cars = [Car(car.id, car.streets) for car in self.cars]
 
         points = 0
@@ -76,15 +79,19 @@ class Simulation:
                 # go through the street
                 if car.remainingCrossingTime > 0:
                     car.remainingCrossingTime -= 1
-                    if car.remainingCrossingTime == 0 and car.currStreet == len(car.streets) - 1:
-                        points += self.bonusPoints + self.maxTime - second
-                        car.remainingCrossingTime = -1  # Don't check this car anymore
+                    if car.remainingCrossingTime == 0:
+                        if car.currStreet == len(car.streets) - 1:
+                            points += self.bonusPoints + self.maxTime - second - 1
+                            car.remainingCrossingTime = -1  # Don't check this car anymore
+                        else:
+                            newCarStreet = car.streets[car.currStreet]
+                            waitingQueues[newCarStreet.id].append(car.id)
 
                 # Add car to the next street if he's at the end of street
                 elif car.remainingCrossingTime == 0:
                     # get street and intersection where the car is
                     currStreet = car.streets[car.currStreet]
-                    currIntersection = currStreet.endIntersection
+                    currIntersection = intersectionsMap[currStreet.endIntersection.id]
 
                     # get current time of the semaphore cycle
                     if currIntersection.semaphoreCycleTime == 0:
@@ -105,21 +112,23 @@ class Simulation:
                     if greenSemaphoreIdx >= 0:
                         # get queue of the street with green semaphore in the intersection
                         street = currIntersection.incomingStreets[greenSemaphoreIdx][0]
-                        waitingQueue = waitingQueues[street.id]
+                        if street.id == currStreet.id:
+                            waitingQueue = waitingQueues[street.id]
 
-                        if len(waitingQueue) > 0:
-                            carId = waitingQueue[0]
-                            if car.id == carId:
-                                waitingQueue.pop(0)
-                                # print("Car", car.id, "went through street", currStreet.name)
-                                if car.currStreet == len(car.streets) - 1:
-                                    print("P: ", self.bonusPoints + self.maxTime - second)
-                                    points += self.bonusPoints + self.maxTime - second
-                                    car.remainingCrossingTime = -1  # Don't check this car anymore
-                                else:
+                            if len(waitingQueue) > 0:
+                                carId = waitingQueue[0]
+                                if car.id == carId:
+                                    waitingQueue.pop(0)
+                                    print("Car", car.id, "went through street", currStreet.name, " at ", second)
                                     car.currStreet += 1
                                     car.remainingCrossingTime = car.streets[car.currStreet].timeToCross - 1
-                                    newCarStreet = car.streets[car.currStreet]
-                                    waitingQueues[newCarStreet.id].append(car.id)
+
+                                    if (car.remainingCrossingTime == 0):
+                                        if car.currStreet == len(car.streets) - 1:
+                                            points += self.bonusPoints + self.maxTime - second - 1
+                                            car.remainingCrossingTime = -1  # Don't check this car anymore
+                                        else:
+                                            newCarStreet = car.streets[car.currStreet]
+                                            waitingQueues[newCarStreet.id].append(car.id)
 
         return points
