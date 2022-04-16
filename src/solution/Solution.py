@@ -37,6 +37,8 @@ class Solution:
 
         startTime = time.time()
         while iterationCounter < maxNumIterations and time.time() - startTime < self.maxExecutionTime:
+            print(
+                f"Basic Climb iteration {iterationCounter} with: {curScore} points ({round(time.time()-startTime, 2)} seconds)")
             neighbourSolution = copyIntersections(curSolution)
 
             for intersection in neighbourSolution:  # Random neighbour
@@ -49,19 +51,20 @@ class Solution:
                 iterationCounter = 0
             else:
                 iterationCounter += 1
-            print(
-                f"Basic Climb iteration {iterationCounter} with: {curScore} points ({time.time()-startTime} seconds)")
 
         self.intersections = curSolution
         return curScore
 
     def hillClimbingSteepest(self):
         curSolution = copyIntersections(self.intersections)
-        neighbourSolution = copyIntersections(curSolution)
+        iterationSolution = copyIntersections(curSolution)
         curScore = self.simulation.eval2(curSolution)
 
         startTime = time.time()
         while time.time() - startTime < self.maxExecutionTime:
+            print(
+                f"Steepest Climb iteration with: {curScore} points ({round(time.time()-startTime, 2)} seconds)")
+
             initialScore = curScore
 
             # Tries to find the best swap to the current iteration solution
@@ -130,6 +133,8 @@ class Solution:
         startTime = time.time()
         while time.time() - startTime < self.maxExecutionTime:
             temperature = coolingSchedule(t0, alpha, iterationCounter)
+            print(
+                f"Simulated Annealing iteration at {round(temperature, precision)}º with: {curScore} points ({round(time.time()-startTime, 2)} seconds)")
             if round(temperature, precision) == 0:
                 break
             iterationCounter += 1
@@ -170,7 +175,8 @@ class Solution:
         # max iterations since last improvement
         while iterationCounter <= maxIter and time.time() - startTime < self.maxExecutionTime:
             # print("score", bestScore, "iter", iterationCounter, "tenure", tenure)
-
+            print(
+                f"Tabu Search iteration {iterationCounter} with: {bestScore} points ({round(time.time()-startTime, 2)} seconds). Tenure = {tenure}")
             neighbourhood = self.getCandidates(
                 candidateSolution, candidateListSize)
             for neighbour in neighbourhood:
@@ -218,7 +224,8 @@ class Solution:
         startTime = time.time()
         currIter = 0
         while (time.time() - startTime < self.maxExecutionTime and currIter < maxIter):
-            print("Curr Iter", currIter)
+            print(
+                f"Generational GA iteration {currIter} ({round(time.time()-startTime, 2)} seconds).")
             newPopulation = []
             newPopulationFitness = []
             for _ in range(populationSize):
@@ -276,7 +283,8 @@ class Solution:
         startTime = time.time()
         currIter = 0
         while (time.time() - startTime < self.maxExecutionTime and currIter < maxIter):
-            print("Curr Iter", currIter)
+            print(
+                f"Generational GA iteration {currIter} ({round(time.time()-startTime, 2)} seconds).")
             if useRoullete:
                 (parent1Idx, parent2Idx) = chooseParentsRoullete(
                     currPopulationFitness)
