@@ -24,6 +24,11 @@ class Intersection:
     def addOutgoingStreet(self, street):
         self.outgoingStreets.append(street)
 
+    def updateSemaphoreAndCycleTime(self, incStreetIdx, newTime):
+        oldStreet = self.incomingStreets[incStreetIdx]
+        self.semaphoreCycleTime += newTime - oldStreet[1]
+        self.incomingStreets[incStreetIdx] = (oldStreet[0], newTime)
+
     # Doesn't update semaphoreCycleTime
     def _changeSemaphore(self, id, time):
         oldStreet = self.incomingStreets[id]

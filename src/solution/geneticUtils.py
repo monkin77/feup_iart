@@ -1,13 +1,28 @@
 import random
 
-def orderBased(parent1, parent2):
+from solution.utils import copyIntersections
+from model.Street import Street
+
+
+def orderBasedCrossover(parent1, parent2):
     middlePoint = len(parent1)//2
     return parent1[:middlePoint] + parent2[middlePoint:]
 
-def chooseParentsRandom(currPopulation):
-    return (random.choice(currPopulation), random.choice(currPopulation))
+def uniformCrossover(parent1Idx, parent2Idx, currPopulationFitness, currPopulation):
+    parent1, parent2 = currPopulation[parent1Idx], currPopulation[parent2Idx]
+    child = copyIntersections(parent1)
 
-def chooseParentsRoullete(currPopulation, currPopulationFitness):
+    p1Prob = currPopulationFitness[parent1Idx] / (currPopulationFitness[parent1Idx] + currPopulationFitness[parent2Idx])
+    for intersectionIdx in range(len(parent1)):
+        for streetIdx in range(len(parent1[intersectionIdx].incomingStreets)):
+            if random.random() > p1Prob:
+                child[intersectionIdx].updateSemaphoreAndCycleTime(streetIdx, parent2[intersectionIdx].incomingStreets[streetIdx][1])
+    return child
+
+def chooseParentsRandom(populationNum):
+    return (random.randint(populationNum - 1), random.randint(populationNum - 1))
+
+def chooseParentsRoullete(currPopulationFitness):
     sumFitness = sum(currPopulationFitness)
 
     randomProb = random.random()
@@ -18,20 +33,20 @@ def chooseParentsRoullete(currPopulation, currPopulationFitness):
         if probCounter >= randomProb:
             break
         currElem += 1
-    child1Idx = currElem
+    parent1Idx = currElem
 
-    sumFitness -= currPopulationFitness[child1Idx]
+    sumFitness -= currPopulationFitness[parent1Idx]
 
     randomProb = random.random()
-    probCounter = currPopulationFitness[0 if child1Idx != 0 else 1] / sumFitness
+    probCounter = currPopulationFitness[0 if parent1Idx != 0 else 1] / sumFitness
     currElem = 0
     while True:
-        if currElem != child1Idx:   # Skip child 1
+        if currElem != parent1Idx:   # Skip child 1
             probCounter += currPopulationFitness[currElem] / sumFitness
             if probCounter >= randomProb:
                 break
         currElem += 1
 
-    child2Idx = currElem
-    return (currPopulation[child1Idx], currPopulation[child2Idx])
+    parent2Idx = currElem
+    return (parent1Idx, parent2Idx)
 
