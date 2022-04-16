@@ -1,3 +1,4 @@
+import os
 from config import *
 
 def getMenuChoice(minValue, maxValue):
@@ -92,6 +93,7 @@ def changeGeneralConfig():
     return configOption
 
 def changeAnnealingConfig():
+    clearScreen()
     while True:
         options = {
             1: f"Set Initial Temperature     ------   {config['initialTemperature']}",
@@ -118,6 +120,7 @@ def changeAnnealingConfig():
             changeCoolingSchedule()
 
 def changeCoolingSchedule():
+    clearScreen()
     options = {
         1: "Exponential Cooling ( 0.8 <= alpha <= 0.9 ) \n T = T0 * (alpha ^ k)",
         2: "Logarithmical Cooling ( alpha > 1 ) \n T = T0 / (1 + alpha * ln(1 + k))",
@@ -136,6 +139,7 @@ def changeCoolingSchedule():
         config['coolingSchedule'] = quadraticCooling
 
 def changeTabuConfig():
+    clearScreen()
     while True:
         options = {
             1: f"Set Number of Candidates  ------   {config['tabuNumCandidates']}",
@@ -153,6 +157,7 @@ def changeTabuConfig():
             changeNumberConfig('tabuNumCandidates')
 
 def changeGeneticConfig():
+    clearScreen()
     while True:
         options = {
             1: f"Set Population Size      ------   {config['populationSize']}",
@@ -181,3 +186,6 @@ def changeGeneticConfig():
             changeBooleanConfig('useRoullete')
         elif configOption == 4:
             changeBooleanConfig('useUniformCrossover')
+
+def clearScreen():
+    os.system('cls' if os.name == 'nt' else 'clear')

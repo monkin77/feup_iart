@@ -50,6 +50,7 @@ def runAlgorithm(algorithmInput):
 
     solution.show()
     print("Final score = ", finalScore)
+    input("Press enter to go back...")
     writeOutput(OUTPUT_FOLDER + config['outputFile'], solution.intersections)
 
 
@@ -57,6 +58,8 @@ def program():
     currentMenu = 0
 
     while currentMenu != -1:
+        clearScreen()
+
         if currentMenu == 0:  # main menu
             currentMenu = showMainMenu()
 
