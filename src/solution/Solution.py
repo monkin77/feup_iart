@@ -3,10 +3,10 @@ import random
 
 from model.Intersection import Intersection
 from solution.TabuSolution import TabuSolution
-
+from Simulation import Simulation
 
 class Solution:
-    def __init__(self, intersections, simulation):
+    def __init__(self, intersections, simulation : Simulation):
         self.intersections = intersections
         self.simulation = simulation
 
@@ -26,7 +26,7 @@ class Solution:
 
     def hillClimbingBasicRandom(self, maxNumIterations):
         curSolution = self.copyIntersections(self.intersections)
-        curScore = self.simulation.eval(curSolution)
+        curScore = self.simulation.eval2(curSolution)
         iterationCounter = 0
 
         while iterationCounter < maxNumIterations:
@@ -35,21 +35,22 @@ class Solution:
             for intersection in neighbourSolution: # Random neighbour
                 intersection.randomMutation()
 
-            neighbourScore = self.simulation.eval(neighbourSolution)
+            neighbourScore = self.simulation.eval2(neighbourSolution)
             if curScore < neighbourScore:
                 curSolution = neighbourSolution
                 curScore = neighbourScore
                 iterationCounter = 0
             else:
                 iterationCounter += 1
+            # print("Basic Climb iteration with: ", curScore, " points")
 
         self.intersections = curSolution
         return curScore
 
     def hillClimbingSteepest(self):
         curSolution = self.copyIntersections(self.intersections)
-        iterationSolution = self.copyIntersections(curSolution)
-        curScore = self.simulation.eval(curSolution)
+        neighbourSolution = self.copyIntersections(curSolution)
+        curScore = self.simulation.eval2(curSolution)
 
         while True:
             initialScore = curScore
@@ -63,7 +64,8 @@ class Solution:
                         intersection = neighbourSolution[intersectionIdx]
 
                         intersection.swapLights(i, j)
-                        neighbourScore = self.simulation.eval(neighbourSolution)
+                        neighbourScore = self.simulation.eval2(
+                            neighbourSolution)
                         if (neighbourScore > curScore):
                             curScore = neighbourScore
                             curSolution = neighbourSolution
@@ -80,7 +82,8 @@ class Solution:
                         intersection = neighbourSolution[intersectionIdx]
 
                         intersection.switchLightPos(i, j)
-                        neighbourScore = self.simulation.eval(neighbourSolution)
+                        neighbourScore = self.simulation.eval(
+                            neighbourSolution)
                         if (neighbourScore > curScore):
                             curScore = neighbourScore
                             curSolution = neighbourSolution
@@ -102,6 +105,8 @@ class Solution:
             iterationSolution = curSolution
             if curScore == initialScore:
                 break
+            # print("\nSteepest Climb iteration with: ", curScore, " points")
+
 
         self.intersections = curSolution
         return curScore
@@ -141,7 +146,7 @@ class Solution:
         tenure = startTenure = math.floor(math.sqrt(len(self.intersections)))
 
         bestSolution = self.copyIntersections(self.intersections)
-        bestScore = self.simulation.eval(bestSolution)
+        bestScore = self.simulation.eval2(bestSolution)
         candidateSolution = self.copyIntersections(bestSolution)
         candidateScore = bestScore
 
@@ -150,20 +155,20 @@ class Solution:
 
         # max iterations since last improvement
         while iterationCounter <= maxIter:
-            print("score", bestScore, "iter", iterationCounter, "tenure", tenure)
+            # print("score", bestScore, "iter", iterationCounter, "tenure", tenure)
 
             neighbourhood = self.getCandidates(candidateSolution, candidateListSize)
             for neighbour in neighbourhood:
                 isTabu = False
                 for tabu in tabuList:
                     if tabu.isSolutionTabu(neighbour):
-                        print("Tabu!")
+                        # print("Tabu!")
                         isTabu = True
                         break
                 if isTabu:
                     continue
 
-                neighbourScore = self.simulation.eval(neighbour)
+                neighbourScore = self.simulation.eval2(neighbour)
                 if neighbourScore > candidateScore:
                     candidateSolution = neighbour
                     candidateScore = neighbourScore
@@ -201,8 +206,8 @@ class Solution:
         for intersection in self.intersections:
             print("|| Intersection " + str(intersection.id) + " ||")
             semString = "["
-            for (_, semaphore) in intersection.incomingStreets:
-                semString += str(semaphore) + ", "
+            for (street, semaphore) in intersection.incomingStreets:
+                semString += street.name + "-" + str(semaphore) + ", "
             semString = semString[:-2]  # remove last 2 characters
             semString += "]"
             print(semString)

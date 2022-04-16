@@ -8,10 +8,12 @@ OUTPUT_FOLDER = "output/"
 
 if __name__ == "__main__":
     inputFile = INPUT_FOLDER + "a.txt"  # input("Select your input file: ")
-    
-    outputFile = OUTPUT_FOLDER + "out.txt"  # input("Select your output file: ")
+
+    # input("Select your output file: ")
+    outputFile = OUTPUT_FOLDER + "out.txt"
 
     (intersections, cars, maxTime, bonusPoints) = readInput(inputFile)
+
     simulation = Simulation(cars, maxTime, bonusPoints)
 
     solution = Solution(intersections, simulation)
