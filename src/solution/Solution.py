@@ -3,7 +3,7 @@ import random
 
 from model.Intersection import Intersection
 from solution.TabuSolution import TabuSolution
-import Simulation
+from Simulation import Simulation
 
 class Solution:
     def __init__(self, intersections, simulation : Simulation):
@@ -42,7 +42,7 @@ class Solution:
                 iterationCounter = 0
             else:
                 iterationCounter += 1
-            print("Basic Climb iteration with: ", curScore, " points")
+            # print("Basic Climb iteration with: ", curScore, " points")
 
         self.intersections = curSolution
         return curScore
@@ -105,7 +105,7 @@ class Solution:
             iterationSolution = curSolution
             if curScore == initialScore:
                 break
-            print("\nSteepest Climb iteration with: ", curScore, " points")
+            # print("\nSteepest Climb iteration with: ", curScore, " points")
 
 
         self.intersections = curSolution
@@ -146,7 +146,7 @@ class Solution:
         tenure = startTenure = math.floor(math.sqrt(len(self.intersections)))
 
         bestSolution = self.copyIntersections(self.intersections)
-        bestScore = self.simulation.eval(bestSolution)
+        bestScore = self.simulation.eval2(bestSolution)
         candidateSolution = self.copyIntersections(bestSolution)
         candidateScore = bestScore
 
@@ -155,20 +155,20 @@ class Solution:
 
         # max iterations since last improvement
         while iterationCounter <= maxIter:
-            print("score", bestScore, "iter", iterationCounter, "tenure", tenure)
+            # print("score", bestScore, "iter", iterationCounter, "tenure", tenure)
 
             neighbourhood = self.getCandidates(candidateSolution, candidateListSize)
             for neighbour in neighbourhood:
                 isTabu = False
                 for tabu in tabuList:
                     if tabu.isSolutionTabu(neighbour):
-                        print("Tabu!")
+                        # print("Tabu!")
                         isTabu = True
                         break
                 if isTabu:
                     continue
 
-                neighbourScore = self.simulation.eval(neighbour)
+                neighbourScore = self.simulation.eval2(neighbour)
                 if neighbourScore > candidateScore:
                     candidateSolution = neighbour
                     candidateScore = neighbourScore

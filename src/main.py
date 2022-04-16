@@ -13,6 +13,7 @@ if __name__ == "__main__":
     outputFile = OUTPUT_FOLDER + "out.txt"
 
     (intersections, cars, maxTime, bonusPoints) = readInput(inputFile)
+
     simulation = Simulation(cars, maxTime, bonusPoints)
 
     solution = Solution(intersections, simulation)

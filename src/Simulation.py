@@ -1,6 +1,5 @@
 from model.Car import Car
 
-
 class Simulation:
     def __init__(self, cars, maxTime, bonusPoints):
         self.cars = cars
@@ -61,6 +60,7 @@ class Simulation:
         return points
 
     def eval2(self, intersections):
+
         waitingQueues = {}  # Stores car Ids
         intersectionsMap = {}
 
@@ -74,8 +74,10 @@ class Simulation:
         cars = [Car(car.id, car.streets) for car in self.cars]
 
         points = 0
+
         for second in range(self.maxTime):
             changedIntersections = {}
+
             for car in cars:
                 # go through the street
                 if car.remainingCrossingTime > 0:
@@ -125,7 +127,7 @@ class Simulation:
                                 if car.id == carId:
                                     waitingQueue.pop(0)
                                     changedIntersections[currIntersection.id] = True
-                                    print("Car", car.id, "went through street", currStreet.name, " at ", second)
+                                    # print("Car", car.id, "went through street", currStreet.name, " at ", second)
                                     car.currStreet += 1
                                     car.remainingCrossingTime = car.streets[car.currStreet].timeToCross - 1
 
