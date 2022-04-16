@@ -1,7 +1,7 @@
 from inputOutput import readInput, writeOutput
 from Simulation import Simulation
-from Solution import Solution
-from coolingSchedule import *
+from solution.Solution import Solution
+from solution.coolingSchedule import *
 
 INPUT_FOLDER = "input/"
 OUTPUT_FOLDER = "output/"
@@ -19,7 +19,8 @@ if __name__ == "__main__":
     solution.setInitialSolution()
     # finalScore = solution.hillClimbingBasicRandom(1000)
     # finalScore = solution.hillClimbingSteepest()
-    finalScore = solution.simulatedAnnealing(100, 0.85, 10, exponentialCooling)
+    # finalScore = solution.simulatedAnnealing(100, 0.85, 10, exponentialCooling)
+    finalScore = solution.tabuSearch(100, 10)
     solution.show()
     print("Final score = ", finalScore)
 
