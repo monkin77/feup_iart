@@ -197,9 +197,9 @@ class Solution:
         return bestScore
 
     # Add parameters for configuration
-    def genetic(self, populationNum, maxTime, maxIter, mutationProb, useRoullete, useUniformCrossover):
+    def generationalGenetic(self, populationNum, maxTime, maxIter, mutationProb, useRoullete, useUniformCrossover):
         currPopulation = self.getInitPopulation(populationNum)
-        if useRoullete:
+        if useRoullete or useUniformCrossover:
             currPopulationFitness = [self.simulation.eval2(sol) for sol in currPopulation]
 
         startTime = time.time()
@@ -225,23 +225,80 @@ class Solution:
                     randomIntersection.randomMutation()
                 
                 newPopulation.append(child)
-                newPopulationFitness.append(self.simulation.eval2(child))
+                if useRoullete or useUniformCrossover:
+                    newPopulationFitness.append(self.simulation.eval2(child))
 
             currPopulation = newPopulation
             currPopulationFitness = newPopulationFitness
             
             currIter += 1
         
-        bestSol = currPopulation[0]
-        bestScore = self.simulation.eval2(bestSol)
-        for solution in currPopulation[1:]:
-            currScore = self.simulation.eval2(solution)
-            if currScore > bestScore:
-                bestScore = currScore
-                bestSol = solution
+        if useRoullete or useUniformCrossover:
+            bestSol = currPopulation[0]
+            bestScore = currPopulationFitness[0]
+            for idx in range(1, len(currPopulation)):
+                if currPopulationFitness[idx] > bestScore:
+                    bestScore = currPopulationFitness[idx]
+                    bestSol = currPopulation[idx]
+        else:
+            bestSol = currPopulation[0]
+            bestScore = self.simulation.eval2(bestSol)
+            for solution in currPopulation[1:]:
+                currScore = self.simulation.eval2(solution)
+                if currScore > bestScore:
+                    bestScore = currScore
+                    bestSol = solution
 
         self.intersections = bestSol
         return bestScore
+
+    def steadyGenetic(self, populationNum, maxTime, maxIter, mutationProb, useRoullete, useUniformCrossover):
+        currPopulation = self.getInitPopulation(populationNum)
+        currPopulationFitness = [self.simulation.eval2(sol) for sol in currPopulation]
+
+        startTime = time.time()
+        currIter = 0
+        while (time.time() - startTime < maxTime and currIter < maxIter):
+            print("Curr Iter", currIter)
+            if useRoullete:
+                (parent1Idx, parent2Idx) = chooseParentsRoullete(currPopulationFitness)
+            else:
+                (parent1Idx, parent2Idx) = chooseParentsRandom(populationNum)
+
+            if useUniformCrossover:
+                child = uniformCrossover(parent1Idx, parent2Idx, currPopulationFitness, currPopulation)
+            else:
+                child = orderBasedCrossover(currPopulation[parent1Idx], currPopulation[parent2Idx])
+            child = copyIntersections(child)
+
+            if random.random() <= mutationProb:
+                randomIntersection = random.choice(child)
+                randomIntersection.randomMutation()
+            
+            childFitness = self.simulation.eval2(child)
+
+            minVal = float('inf')
+            minIdx = -1
+            for i in range(len(currPopulationFitness)):
+                if currPopulationFitness[i] < minVal:
+                    minVal = currPopulationFitness[i]
+                    minIdx = i
+                
+            currPopulationFitness[minIdx] = childFitness
+            currPopulation[minIdx] = child
+            
+            currIter += 1
+        
+        bestSol = currPopulation[0]
+        bestScore = currPopulationFitness[0]
+        for idx in range(1, len(currPopulation)):
+            if currPopulationFitness[idx] > bestScore:
+                bestScore = currPopulationFitness[idx]
+                bestSol = currPopulation[idx]
+
+        self.intersections = bestSol
+        return bestScore
+
 
     def getInitPopulation(self, populationNum):
         initPopulation = []
