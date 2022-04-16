@@ -13,8 +13,10 @@ def chooseParentsRoullete(currPopulation, currPopulationFitness):
     probCounter = 0
     randomProb = random.random()
     currElem = 0
-    while probCounter < randomProb:
+    while True:
         probCounter += currPopulationFitness[currElem] / sumFitness
+        if probCounter >= randomProb:
+            break
         currElem += 1
     child1Idx = currElem
 
@@ -23,9 +25,11 @@ def chooseParentsRoullete(currPopulation, currPopulationFitness):
     probCounter = 0
     randomProb = random.random()
     currElem = 0
-    while probCounter < randomProb:
+    while True:
         if currElem != child1Idx:   # Skip child 1
             probCounter += currPopulationFitness[currElem] / sumFitness
+            if probCounter >= randomProb:
+                break
         currElem += 1
 
     child2Idx = currElem
