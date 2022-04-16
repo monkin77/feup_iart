@@ -1,7 +1,6 @@
 from inputOutput import readInput, writeOutput
 from Simulation import Simulation
 from solution.Solution import Solution
-from solution.coolingSchedule import *
 from menus import *
 from config import *
 
@@ -61,7 +60,8 @@ def program():
         clearScreen()
 
         if currentMenu == 0:  # main menu
-            currentMenu = showMainMenu()
+            showMainMenu()
+            currentMenu = 2
 
         elif currentMenu == 1: # Choose input file
             fileOption = showFilesMenu()
@@ -75,10 +75,10 @@ def program():
         elif currentMenu == 2: # Choose general config
             choice = changeGeneralConfig()
 
-            if choice == 5: # choose algorithm
+            if choice == 6: # choose algorithm
                 currentMenu = 3
 
-            elif choice == 6: # exit
+            elif choice == 7: # exit
                 currentMenu = 0
                 continue
 

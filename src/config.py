@@ -14,7 +14,8 @@ files = {
 
 config = {
     # I/O
-    'inputFile': '',
+    'inputFile': 'a.txt',
+    'inputFileLabel': 'An example (A)',
     'outputFile': 'out.txt',
 
     # General

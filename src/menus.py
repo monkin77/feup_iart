@@ -23,19 +23,13 @@ def printMenu(options):
 
     return getMenuChoice(1, len(options))
 
-
+# TODO Make this pretty
 def showMainMenu():
-    options = {
-        1: "Choose an input file",
-        2: "Exit"
-    }
-
-    inputOption = printMenu(options)
-    if inputOption == 2:
-        return -1
-    return inputOption
+    print("Welcome to the Google Hashcode 2021 Solver!")
+    input("Press enter to start...")
 
 def showFilesMenu():
+    clearScreen()
     options = {
         1: 'An example (A)',
         2: 'By the ocean (B)',
@@ -43,9 +37,10 @@ def showFilesMenu():
         4: 'Daily commute (D)',
         5: 'Etoile (E)',
         6: 'Forever jammed (F)',
-        7: 'Return to main menu'
     }
-    return printMenu(options)
+    inputOption = printMenu(options)
+    config['inputFileLabel'] = options[inputOption]
+    return inputOption
 
 def getOption(options, input):
     return options[input]
@@ -67,27 +62,31 @@ def showAlgorithmMenu():
 
 def changeGeneralConfig():
     options = {
-        1: f"Set output file             ------   {config['outputFile']}",
-        2: f"Set Max Num Iterations      ------   {config['maxIterations']}",
-        3: f"Set Max Execution Time      ------   {config['maxTime']} secs",
-        4: "Don't Remove Unused Streets"
+        1: f"Set Input File              ------   {config['inputFileLabel']}",
+        2: f"Set Output File             ------   {config['outputFile']}",
+        3: f"Set Max Num Iterations      ------   {config['maxIterations']}",
+        4: f"Set Max Execution Time      ------   {config['maxTime']} secs",
+        5: "Don't Remove Unused Streets"
                 if config['removeUnusedStreets'] else
             "Remove Unused Streets",
-        5: 'Choose Algorithm',
-        6: 'Go to Main Menu',
+        6: 'Choose Algorithm',
+        7: 'Go to Main Menu',
     }
 
     configOption = printMenu(options)
     if configOption >= len(options) - 1:
         return configOption
 
-    if configOption == 1:
-        changeOutputFile()
+    if config == 1:
+        fileOption = showFilesMenu()
+        config['inputFile'] = files[fileOption]
     elif configOption == 2:
-        changeNumberConfig('maxIterations')
+        changeOutputFile()
     elif configOption == 3:
-        changeNumberConfig('maxTime')
+        changeNumberConfig('maxIterations')
     elif configOption == 4:
+        changeNumberConfig('maxTime')
+    elif configOption == 5:
         changeBooleanConfig('removeUnusedStreets')
 
     return configOption

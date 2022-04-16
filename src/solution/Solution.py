@@ -5,7 +5,7 @@ from solution.TabuSolution import TabuSolution
 from Simulation import Simulation
 import time
 
-from solution.geneticUtils import chooseParentsRandom, chooseParentsRoullete, orderBasedCrossover, uniformCrossover
+from solution.geneticUtils import *
 from solution.utils import copyIntersections
 
 class Solution:
