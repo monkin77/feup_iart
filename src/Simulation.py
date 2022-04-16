@@ -18,7 +18,7 @@ class Simulation:
 
         points = 0
         for second in range(self.maxTime + 1):
-            print("second", second)
+            # print("second", second)
             for intersection in intersections:
                 if intersection.semaphoreCycleTime == 0:
                     currIterTime = 0
@@ -60,7 +60,6 @@ class Simulation:
         return points
 
     def eval2(self, intersections):
-
         waitingQueues = {}  # Stores car Ids
         intersectionsMap = {}
 
