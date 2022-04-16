@@ -23,7 +23,7 @@ if __name__ == "__main__":
     # finalScore = solution.hillClimbingSteepest()
     # finalScore = solution.simulatedAnnealing(100, 0.85, 10, exponentialCooling)
     # finalScore = solution.tabuSearch(100, 10)
-    finalScore = solution.genetic(10, 20, 1000, 0.2)
+    finalScore = solution.genetic(10, 20, 1000, 0.2, True)
     solution.show()
     print("Final score = ", finalScore)
 
