@@ -4,6 +4,9 @@ import random
 from model.Intersection import Intersection
 from solution.TabuSolution import TabuSolution
 from Simulation import Simulation
+import time
+
+from solution.geneticUtils import chooseParentsRandom, chooseParentsRoullete, orderBased
 
 class Solution:
     def __init__(self, intersections, simulation : Simulation):
@@ -192,6 +195,65 @@ class Solution:
 
         self.intersections = bestSolution
         return bestScore
+
+    # Add parameters for configuration
+    def genetic(self, populationNum, maxTime, maxIter, mutationProb, useRoullete):
+        currPopulation = self.getInitPopulation(populationNum)
+        if useRoullete:
+            currPopulationFitness = [self.simulation.eval2(sol) for sol in currPopulation]
+
+        startTime = time.time()
+        currIter = 0
+        while (time.time() - startTime < maxTime and currIter < maxIter):
+            print("Curr Iter", currIter)
+            newPopulation = []
+            for _ in range(populationNum):
+                if useRoullete:
+                    (parent1, parent2) = chooseParentsRoullete(currPopulation, currPopulationFitness)
+                else:
+                    (parent1, parent2) = chooseParentsRandom(currPopulation)
+
+                child = self.copyIntersections(orderBased(parent1, parent2))
+
+                if random.random() <= mutationProb:
+                    randomIntersection = random.choice(child)
+                    randomIntersection.randomMutation()
+
+                newPopulation.append(child)
+            currPopulation = newPopulation
+
+            currIter += 1
+        
+        bestSol = currPopulation[0]
+        bestScore = self.simulation.eval2(bestSol)
+        for solution in currPopulation[1:]:
+            currScore = self.simulation.eval2(solution)
+            if currScore > bestScore:
+                bestScore = currScore
+                bestSol = solution
+
+        self.intersections = bestSol
+        return bestScore
+
+    def getInitPopulation(self, populationNum):
+        initPopulation = []
+        initialSolution = self.copyIntersections(self.intersections)
+        if len(initialSolution) != 0:
+            initPopulation.append(initialSolution)
+        
+        clearIntersections = self.copyIntersections(self.intersections)
+        for intersection in clearIntersections:
+            intersection.changeAllSemaphores(0)
+
+        while len(initPopulation) < populationNum:
+            newCandidate = self.copyIntersections(clearIntersections)
+            for intersection in newCandidate:
+                for idx in range(len(intersection.incomingStreets)):
+                    intersection.changeLightTime(idx, random.randint(0, self.simulation.maxTime))
+
+            initPopulation.append(newCandidate)
+
+        return initPopulation
 
     def getCandidates(self, solution, candidateListSize):
         candidates = []
