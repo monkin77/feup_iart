@@ -1,5 +1,6 @@
 import math
 import random
+from inputOutput import clearConsole, printColoredText
 
 from solution.TabuSolution import TabuSolution
 from Simulation import Simulation
@@ -8,8 +9,9 @@ import time
 from solution.geneticUtils import *
 from solution.utils import copyIntersections
 
+
 class Solution:
-    def __init__(self, intersections, simulation : Simulation, maxExecutionTime):
+    def __init__(self, intersections, simulation: Simulation, maxExecutionTime):
         self.intersections = intersections
         self.simulation = simulation
         self.maxExecutionTime = maxExecutionTime
@@ -37,7 +39,7 @@ class Solution:
         while iterationCounter < maxNumIterations and time.time() - startTime < self.maxExecutionTime:
             neighbourSolution = copyIntersections(curSolution)
 
-            for intersection in neighbourSolution: # Random neighbour
+            for intersection in neighbourSolution:  # Random neighbour
                 intersection.randomMutation()
 
             neighbourScore = self.simulation.eval2(neighbourSolution)
@@ -47,7 +49,8 @@ class Solution:
                 iterationCounter = 0
             else:
                 iterationCounter += 1
-            # print("Basic Climb iteration with: ", curScore, " points")
+            print(
+                f"Basic Climb iteration {iterationCounter} with: {curScore} points ({time.time()-startTime} seconds)")
 
         self.intersections = curSolution
         return curScore
@@ -66,7 +69,8 @@ class Solution:
                 iterIntersection = iterationSolution[intersectionIdx]
                 for i in range(len(iterIntersection.incomingStreets) - 1):
                     for j in range(i + 1, len(iterIntersection.incomingStreets)):
-                        neighbourSolution = copyIntersections(iterationSolution)
+                        neighbourSolution = copyIntersections(
+                            iterationSolution)
                         intersection = neighbourSolution[intersectionIdx]
 
                         intersection.swapLights(i, j)
@@ -84,7 +88,8 @@ class Solution:
                     for j in range(len(iterIntersection.incomingStreets)):
                         if (i == j):
                             continue
-                        neighbourSolution = copyIntersections(iterationSolution)
+                        neighbourSolution = copyIntersections(
+                            iterationSolution)
                         intersection = neighbourSolution[intersectionIdx]
 
                         intersection.switchLightPos(i, j)
@@ -106,13 +111,13 @@ class Solution:
                         curSolution = neighbourSolution
                         neighbourSolution = copyIntersections(curSolution)
                     else:
-                        neighbourSolution = copyIntersections(iterationSolution)
+                        neighbourSolution = copyIntersections(
+                            iterationSolution)
 
             iterationSolution = curSolution
             if curScore == initialScore:
                 break
             # print("\nSteepest Climb iteration with: ", curScore, " points")
-
 
         self.intersections = curSolution
         return curScore
@@ -131,7 +136,8 @@ class Solution:
 
             neighbourSolution = copyIntersections(curSolution)
 
-            random.choice(neighbourSolution).randomMutation() # Random neighbour
+            # Random neighbour
+            random.choice(neighbourSolution).randomMutation()
             neighbourScore = self.simulation.eval(neighbourSolution)
 
             diff = neighbourScore - curScore
@@ -165,7 +171,8 @@ class Solution:
         while iterationCounter <= maxIter and time.time() - startTime < self.maxExecutionTime:
             # print("score", bestScore, "iter", iterationCounter, "tenure", tenure)
 
-            neighbourhood = self.getCandidates(candidateSolution, candidateListSize)
+            neighbourhood = self.getCandidates(
+                candidateSolution, candidateListSize)
             for neighbour in neighbourhood:
                 isTabu = False
                 for tabu in tabuList:
@@ -205,7 +212,8 @@ class Solution:
     def generationalGenetic(self, populationSize, maxIter, mutationProb, useRoullete, useUniformCrossover):
         currPopulation = self.getInitPopulation(populationSize)
         if useRoullete or useUniformCrossover:
-            currPopulationFitness = [self.simulation.eval2(sol) for sol in currPopulation]
+            currPopulationFitness = [
+                self.simulation.eval2(sol) for sol in currPopulation]
 
         startTime = time.time()
         currIter = 0
@@ -215,29 +223,32 @@ class Solution:
             newPopulationFitness = []
             for _ in range(populationSize):
                 if useRoullete:
-                    (parent1Idx, parent2Idx) = chooseParentsRoullete(currPopulationFitness)
+                    (parent1Idx, parent2Idx) = chooseParentsRoullete(
+                        currPopulationFitness)
                 else:
                     (parent1Idx, parent2Idx) = chooseParentsRandom(populationSize)
 
                 if useUniformCrossover:
-                    child = uniformCrossover(parent1Idx, parent2Idx, currPopulationFitness, currPopulation)
+                    child = uniformCrossover(
+                        parent1Idx, parent2Idx, currPopulationFitness, currPopulation)
                 else:
-                    child = orderBasedCrossover(currPopulation[parent1Idx], currPopulation[parent2Idx])
+                    child = orderBasedCrossover(
+                        currPopulation[parent1Idx], currPopulation[parent2Idx])
                 child = copyIntersections(child)
 
                 if random.random() <= mutationProb:
                     randomIntersection = random.choice(child)
                     randomIntersection.randomMutation()
-                
+
                 newPopulation.append(child)
                 if useRoullete or useUniformCrossover:
                     newPopulationFitness.append(self.simulation.eval2(child))
 
             currPopulation = newPopulation
             currPopulationFitness = newPopulationFitness
-            
+
             currIter += 1
-        
+
         if useRoullete or useUniformCrossover:
             bestSol = currPopulation[0]
             bestScore = currPopulationFitness[0]
@@ -259,27 +270,31 @@ class Solution:
 
     def steadyGenetic(self, populationSize, maxIter, mutationProb, useRoullete, useUniformCrossover):
         currPopulation = self.getInitPopulation(populationSize)
-        currPopulationFitness = [self.simulation.eval2(sol) for sol in currPopulation]
+        currPopulationFitness = [
+            self.simulation.eval2(sol) for sol in currPopulation]
 
         startTime = time.time()
         currIter = 0
         while (time.time() - startTime < self.maxExecutionTime and currIter < maxIter):
             print("Curr Iter", currIter)
             if useRoullete:
-                (parent1Idx, parent2Idx) = chooseParentsRoullete(currPopulationFitness)
+                (parent1Idx, parent2Idx) = chooseParentsRoullete(
+                    currPopulationFitness)
             else:
                 (parent1Idx, parent2Idx) = chooseParentsRandom(populationSize)
 
             if useUniformCrossover:
-                child = uniformCrossover(parent1Idx, parent2Idx, currPopulationFitness, currPopulation)
+                child = uniformCrossover(
+                    parent1Idx, parent2Idx, currPopulationFitness, currPopulation)
             else:
-                child = orderBasedCrossover(currPopulation[parent1Idx], currPopulation[parent2Idx])
+                child = orderBasedCrossover(
+                    currPopulation[parent1Idx], currPopulation[parent2Idx])
             child = copyIntersections(child)
 
             if random.random() <= mutationProb:
                 randomIntersection = random.choice(child)
                 randomIntersection.randomMutation()
-            
+
             childFitness = self.simulation.eval2(child)
 
             minVal = float('inf')
@@ -288,12 +303,12 @@ class Solution:
                 if currPopulationFitness[i] < minVal:
                     minVal = currPopulationFitness[i]
                     minIdx = i
-                
+
             currPopulationFitness[minIdx] = childFitness
             currPopulation[minIdx] = child
-            
+
             currIter += 1
-        
+
         bestSol = currPopulation[0]
         bestScore = currPopulationFitness[0]
         for idx in range(1, len(currPopulation)):
@@ -304,13 +319,12 @@ class Solution:
         self.intersections = bestSol
         return bestScore
 
-
     def getInitPopulation(self, populationSize):
         initPopulation = []
         initialSolution = copyIntersections(self.intersections)
         if len(initialSolution) != 0:
             initPopulation.append(initialSolution)
-        
+
         clearIntersections = copyIntersections(self.intersections)
         for intersection in clearIntersections:
             intersection.changeAllSemaphores(0)
@@ -319,7 +333,8 @@ class Solution:
             newCandidate = copyIntersections(clearIntersections)
             for intersection in newCandidate:
                 for idx in range(len(intersection.incomingStreets)):
-                    intersection.changeLightTime(idx, random.randint(0, self.simulation.maxTime / 2))
+                    intersection.changeLightTime(
+                        idx, random.randint(0, self.simulation.maxTime / 2))
 
             initPopulation.append(newCandidate)
 
@@ -329,17 +344,18 @@ class Solution:
         candidates = []
         for _ in range(candidateListSize):
             newCandidate = copyIntersections(solution)
-            random.choice(newCandidate).randomMutation() # Random neighbour
+            random.choice(newCandidate).randomMutation()  # Random neighbour
             candidates.append(newCandidate)
 
         return candidates
 
     def show(self):
+        clearConsole()
         for intersection in self.intersections:
-            print("|| Intersection " + str(intersection.id) + " ||")
+            printColoredText("| Intersection " + str(intersection.id) + " |")
             semString = "["
             for (street, semaphore) in intersection.incomingStreets:
-                semString += street.name + "-" + str(semaphore) + ", "
+                semString += street.name + " (" + str(semaphore) + "), "
             semString = semString[:-2]  # remove last 2 characters
             semString += "]"
             print(semString)
