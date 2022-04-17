@@ -81,6 +81,7 @@ def program():
             elif choice == 7: # exit
                 currentMenu = 0
                 continue
+            
 
         elif currentMenu == 3:
             algorithmInput = showAlgorithmMenu()

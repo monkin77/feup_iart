@@ -77,7 +77,7 @@ def changeGeneralConfig():
     if configOption >= len(options) - 1:
         return configOption
 
-    if config == 1:
+    if configOption == 1:
         fileOption = showFilesMenu()
         config['inputFile'] = files[fileOption]
     elif configOption == 2:
@@ -161,12 +161,12 @@ def changeGeneticConfig():
         options = {
             1: f"Set Population Size      ------   {config['populationSize']}",
             2: f"Set Mutation Probability ------   {config['mutationProb']}",
-            3: f"Use Random Selection     ------   Now Using Roullete Selection"
+            3: f"Use Random Selection     ------   Currently Using Roullete Selection"
                     if config['useRoullete'] else
-                f"Use Roullete Selection   ------   Now Using Random Selection",
-            4: f"Use Order Base Crossover ------   Now Using Uniform Crossover"
+                f"Use Roullete Selection   ------   Currently Using Random Selection",
+            4: f"Use Order Base Crossover ------   Currently Using Uniform Crossover"
                     if config['useUniformCrossover'] else
-                f"Use Uniform Crossover    ------   Now Using Order Base Crossover",
+                f"Use Uniform Crossover    ------   Currently Using Order Base Crossover",
             5: "Run Genetic Algorithm",
             6: 'Choose Algorithm',
         }
