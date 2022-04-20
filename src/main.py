@@ -1,97 +1,104 @@
 from inputOutput import readInput, writeOutput
 from Simulation import Simulation
 from solution.Solution import Solution
-from solution.coolingSchedule import *
 from menus import *
+from config import *
 
-INPUT_FOLDER = "../input/"
-OUTPUT_FOLDER = "../output/"
-
-files = {1: 'a.txt', 2: 'b.txt', 3: 'c.txt', 4: 'd.txt', 5: 'e.txt', 6: 'f.txt'}
-flags = {'removeUnusedStreets': False, 'iterations': 0, 'inicialTemperature': 100, 'alpha': 0.85, 'precision': 10, 'tabuNumCandidates': 10}
-
-def runAlgorithm(inputFile, outputFile, algorithmInput, flags):
-    (intersections, cars, maxTime, bonusPoints) = readInput(inputFile)
+def runAlgorithm(algorithmInput):
+    (intersections, cars, maxTime, bonusPoints) = readInput(INPUT_FOLDER + config['inputFile'])
     simulation = Simulation(cars, maxTime, bonusPoints)
-    solution = Solution(intersections, simulation)
+    solution = Solution(intersections, simulation, config['maxTime'])
 
-    if flags['removeUnusedStreets']:
+    if config['removeUnusedStreets']:
         solution.removeUnusedStreets()
 
     solution.setInitialSolution()
 
     if algorithmInput == 1:
-        finalScore = solution.hillClimbingBasicRandom(flags['iterations'])
+        finalScore = solution.hillClimbingBasicRandom(config['maxIterations'])
     elif algorithmInput == 2:
         finalScore = solution.hillClimbingSteepest()
     elif algorithmInput == 3:
-        finalScore = solution.simulatedAnnealing(flags['inicialTemperature'], flags['alpha'], flags['precision'], exponentialCooling)
+        if changeAnnealingConfig(): # Go back
+            return
+
+        finalScore = solution.simulatedAnnealing(
+            config['initialTemperature'], config['alpha'], config['precision'], config['coolingSchedule']
+        )
     elif algorithmInput == 4:
-        finalScore = solution.tabuSearch(flags['iterations'], flags['tabuNumCandidates'])
+        if changeTabuConfig():
+            return
+
+        finalScore = solution.tabuSearch(config['maxIterations'], config['tabuNumCandidates'])
+    elif algorithmInput == 5:
+        if changeGeneticConfig():
+            return
+
+        finalScore = solution.generationalGenetic(
+            config['populationSize'], config['maxIterations'], config['mutationProb'],
+            config['useRoullete'], config['useUniformCrossover']
+        )
+    elif algorithmInput == 6:
+        if changeGeneticConfig():
+            return
+
+        finalScore = solution.steadyGenetic(
+            config['populationSize'], config['maxIterations'],
+            config['mutationProb'], config['useRoullete'], config['useUniformCrossover']
+        )
 
     solution.show()
     print("Final score = ", finalScore)
-    writeOutput(outputFile, solution.intersections)
+    input("Press enter to go back...")
+    writeOutput(OUTPUT_FOLDER + config['outputFile'], solution.intersections)
 
 
 def program():
     currentMenu = 0
-    inputFile = INPUT_FOLDER + 'a.txt'
-    outputFile = OUTPUT_FOLDER + "out.txt"
-    currFlags = flags
 
     while currentMenu != -1:
+        clearScreen()
+
         if currentMenu == 0:  # main menu
-            currentMenu = showMainMenu()
+            showMainMenu()
+            currentMenu = 2
 
-        elif currentMenu == 1:
+        elif currentMenu == 1: # Choose input file
             fileOption = showFilesMenu()
-            # if it's 7 go to main menu
             if fileOption == 7:
-                currentMenu = 0
-            else:
-                currentMenu = 2
-
-            inputFile = INPUT_FOLDER + files[fileOption]
-        elif currentMenu == 2:    
-            configInput = getInitialConfig()
-            userInput = True
-            # choose algorithm
-            if configInput == 8:
-                currentMenu = 3
-            # exit
-            elif configInput == 9: 
                 currentMenu = 0
                 continue
             else:
-                key = getConfigKeyFromInput(configInput)
-                if key == 'removeUnusedStreets':
-                    userInput = True 
-                elif key == 'addUnusedStreets':
-                    key = 'removeUnusedStreets'
-                    userInput = False 
-                else:
-                    userInput = getNumberInput(0)
-                currFlags[key] = userInput
-                
+                currentMenu = 2
+
+            config['inputFile'] = files[fileOption]
+        elif currentMenu == 2: # Choose general config
+            choice = changeGeneralConfig()
+
+            if choice == 6: # choose algorithm
+                currentMenu = 3
+
+            elif choice == 7: # exit
+                currentMenu = 0
+                continue
+            
+
         elif currentMenu == 3:
             algorithmInput = showAlgorithmMenu()
 
             # choose another file
-            if algorithmInput == 6:
+            if algorithmInput == 7:
                 currentMenu = 1
                 continue
             # new configurations
-            elif algorithmInput == 7:
+            elif algorithmInput == 8:
                 currentMenu = 2
             # go to main menu
-            elif algorithmInput == 8:
+            elif algorithmInput == 9:
                 currentMenu = 0
                 continue
             else:
-                runAlgorithm(inputFile, outputFile, algorithmInput, flags)
-
-
+                runAlgorithm(algorithmInput)
 
 if __name__ == "__main__":
     program()

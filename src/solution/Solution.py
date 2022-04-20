@@ -5,13 +5,14 @@ from solution.TabuSolution import TabuSolution
 from Simulation import Simulation
 import time
 
-from solution.geneticUtils import chooseParentsRandom, chooseParentsRoullete, orderBasedCrossover, uniformCrossover
+from solution.geneticUtils import *
 from solution.utils import copyIntersections
 
 class Solution:
-    def __init__(self, intersections, simulation : Simulation):
+    def __init__(self, intersections, simulation : Simulation, maxExecutionTime):
         self.intersections = intersections
         self.simulation = simulation
+        self.maxExecutionTime = maxExecutionTime
 
     def setInitialSolution(self):
         for intersection in self.intersections:
@@ -32,7 +33,8 @@ class Solution:
         curScore = self.simulation.eval2(curSolution)
         iterationCounter = 0
 
-        while iterationCounter < maxNumIterations:
+        startTime = time.time()
+        while iterationCounter < maxNumIterations and time.time() - startTime < self.maxExecutionTime:
             neighbourSolution = copyIntersections(curSolution)
 
             for intersection in neighbourSolution: # Random neighbour
@@ -55,7 +57,8 @@ class Solution:
         neighbourSolution = copyIntersections(curSolution)
         curScore = self.simulation.eval2(curSolution)
 
-        while True:
+        startTime = time.time()
+        while time.time() - startTime < self.maxExecutionTime:
             initialScore = curScore
 
             # Tries to find the best swap to the current iteration solution
@@ -119,7 +122,8 @@ class Solution:
         curScore = self.simulation.eval(curSolution)
         iterationCounter = 0
 
-        while True:
+        startTime = time.time()
+        while time.time() - startTime < self.maxExecutionTime:
             temperature = coolingSchedule(t0, alpha, iterationCounter)
             if round(temperature, precision) == 0:
                 break
@@ -156,8 +160,9 @@ class Solution:
         tabuList = [TabuSolution(bestSolution, tenure)]
         iterationCounter = 0
 
+        startTime = time.time()
         # max iterations since last improvement
-        while iterationCounter <= maxIter:
+        while iterationCounter <= maxIter and time.time() - startTime < self.maxExecutionTime:
             # print("score", bestScore, "iter", iterationCounter, "tenure", tenure)
 
             neighbourhood = self.getCandidates(candidateSolution, candidateListSize)
@@ -197,22 +202,22 @@ class Solution:
         return bestScore
 
     # Add parameters for configuration
-    def generationalGenetic(self, populationNum, maxTime, maxIter, mutationProb, useRoullete, useUniformCrossover):
-        currPopulation = self.getInitPopulation(populationNum)
+    def generationalGenetic(self, populationSize, maxIter, mutationProb, useRoullete, useUniformCrossover):
+        currPopulation = self.getInitPopulation(populationSize)
         if useRoullete or useUniformCrossover:
             currPopulationFitness = [self.simulation.eval2(sol) for sol in currPopulation]
 
         startTime = time.time()
         currIter = 0
-        while (time.time() - startTime < maxTime and currIter < maxIter):
+        while (time.time() - startTime < self.maxExecutionTime and currIter < maxIter):
             print("Curr Iter", currIter)
             newPopulation = []
             newPopulationFitness = []
-            for _ in range(populationNum):
+            for _ in range(populationSize):
                 if useRoullete:
                     (parent1Idx, parent2Idx) = chooseParentsRoullete(currPopulationFitness)
                 else:
-                    (parent1Idx, parent2Idx) = chooseParentsRandom(populationNum)
+                    (parent1Idx, parent2Idx) = chooseParentsRandom(populationSize)
 
                 if useUniformCrossover:
                     child = uniformCrossover(parent1Idx, parent2Idx, currPopulationFitness, currPopulation)
@@ -252,18 +257,18 @@ class Solution:
         self.intersections = bestSol
         return bestScore
 
-    def steadyGenetic(self, populationNum, maxTime, maxIter, mutationProb, useRoullete, useUniformCrossover):
-        currPopulation = self.getInitPopulation(populationNum)
+    def steadyGenetic(self, populationSize, maxIter, mutationProb, useRoullete, useUniformCrossover):
+        currPopulation = self.getInitPopulation(populationSize)
         currPopulationFitness = [self.simulation.eval2(sol) for sol in currPopulation]
 
         startTime = time.time()
         currIter = 0
-        while (time.time() - startTime < maxTime and currIter < maxIter):
+        while (time.time() - startTime < self.maxExecutionTime and currIter < maxIter):
             print("Curr Iter", currIter)
             if useRoullete:
                 (parent1Idx, parent2Idx) = chooseParentsRoullete(currPopulationFitness)
             else:
-                (parent1Idx, parent2Idx) = chooseParentsRandom(populationNum)
+                (parent1Idx, parent2Idx) = chooseParentsRandom(populationSize)
 
             if useUniformCrossover:
                 child = uniformCrossover(parent1Idx, parent2Idx, currPopulationFitness, currPopulation)
@@ -300,7 +305,7 @@ class Solution:
         return bestScore
 
 
-    def getInitPopulation(self, populationNum):
+    def getInitPopulation(self, populationSize):
         initPopulation = []
         initialSolution = copyIntersections(self.intersections)
         if len(initialSolution) != 0:
@@ -310,7 +315,7 @@ class Solution:
         for intersection in clearIntersections:
             intersection.changeAllSemaphores(0)
 
-        while len(initPopulation) < populationNum:
+        while len(initPopulation) < populationSize:
             newCandidate = copyIntersections(clearIntersections)
             for intersection in newCandidate:
                 for idx in range(len(intersection.incomingStreets)):
