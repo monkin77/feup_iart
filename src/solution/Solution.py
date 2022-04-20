@@ -1,7 +1,8 @@
 import math
 import random
 from config import *
-from inputOutput import initCSV, saveResultCSV, clearConsole, printColoredText
+from inputOutput import initCSV, saveResultCSV, printColoredText
+from menus import clearScreen
 
 from solution.TabuSolution import TabuSolution
 from Simulation import Simulation
@@ -250,7 +251,7 @@ class Solution:
         currIter = 0
         while (time.time() - startTime < self.maxExecutionTime and currIter < maxIter):
             print(
-                f"Generational GA iteration {currIter} ({round(time.time()-startTime, 2)} seconds).")
+                f"Generational GA iteration {currIter} with: {bestScore} points ({round(time.time()-startTime, 2)} seconds).")
             newPopulation = []
             newPopulationFitness = []
             newBestScore = -1
@@ -305,7 +306,7 @@ class Solution:
         currIter = 0
         while (time.time() - startTime < self.maxExecutionTime and currIter < maxIter):
             print(
-                f"Steady GA iteration {currIter} ({round(time.time()-startTime, 2)} seconds).")
+                f"Steady GA iteration {currIter} with: {bestScore} points ({round(time.time()-startTime, 2)} seconds).")
             if useRoullete:
                 (parent1Idx, parent2Idx) = chooseParentsRoullete(
                     currPopulationFitness)
@@ -381,7 +382,7 @@ class Solution:
         return candidates
 
     def show(self):
-        clearConsole()
+        clearScreen()
         for intersection in self.intersections:
             printColoredText("| Intersection " + str(intersection.id) + " |")
             semString = "["
