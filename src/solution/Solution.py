@@ -365,8 +365,7 @@ class Solution:
             newCandidate = copyIntersections(clearIntersections)
             for intersection in newCandidate:
                 for idx in range(len(intersection.incomingStreets)):
-                    intersection.changeLightTime(
-                        idx, random.randint(0, self.simulation.maxTime / 2))
+                    intersection.changeLightTime(idx, random.randint(0, int(math.sqrt(self.simulation.maxTime)) ) )
 
             initPopulation.append(newCandidate)
 
