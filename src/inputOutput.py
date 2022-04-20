@@ -2,7 +2,6 @@ from model.Intersection import Intersection
 from model.Car import Car
 from model.Street import Street
 
-
 def readInput(fileName):
     lines = [line.strip().split(' ')
              for line in open(fileName, "r").readlines()]
@@ -62,12 +61,14 @@ def writeOutput(fileName, intersections):
 
     f.close()
 
-# Prints newlines to simulate clearing console
-
-
-def clearConsole():
-    print('\n'*100)
-
-
 def printColoredText(text):
-    print(f"\033[1;36;40m{text}\033[0;37;40m")
+    print(f"\033[1;36m{text}\033[0;37m")
+
+def initCSV(fileName):
+    f = open(fileName, "w")
+    f.write("iterations,time,score\n")
+    return f
+
+def saveResultCSV(f, iterations, time, score):
+    time = round(time, 5)
+    f.write(f"{iterations},{time},{score}\n")

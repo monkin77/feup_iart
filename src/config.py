@@ -16,7 +16,7 @@ config = {
     # I/O
     'inputFile': 'a.txt',
     'inputFileLabel': 'An example (A)',
-    'outputFile': 'out.txt',
+    'outputFile': 'out',
 
     # General
     'removeUnusedStreets': False,
