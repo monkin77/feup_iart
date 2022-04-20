@@ -1,6 +1,7 @@
 import math
 import random
-from inputOutput import clearConsole, printColoredText
+from config import *
+from inputOutput import initCSV, saveResultCSV, clearConsole, printColoredText
 
 from solution.TabuSolution import TabuSolution
 from Simulation import Simulation
@@ -15,6 +16,7 @@ class Solution:
         self.intersections = intersections
         self.simulation = simulation
         self.maxExecutionTime = maxExecutionTime
+        self.csv = initCSV(OUTPUT_FOLDER + config['outputFile'] + ".csv")
 
     def setInitialSolution(self):
         for intersection in self.intersections:
@@ -33,7 +35,10 @@ class Solution:
     def hillClimbingBasicRandom(self, maxNumIterations):
         curSolution = copyIntersections(self.intersections)
         curScore = self.simulation.eval(curSolution)
+        stopCounter = 0
         iterationCounter = 0
+
+        saveResultCSV(self.csv, 0, 0, curScore)
 
         startTime = time.time()
         while iterationCounter < maxNumIterations and time.time() - startTime < self.maxExecutionTime:
@@ -48,9 +53,11 @@ class Solution:
             if curScore < neighbourScore:
                 curSolution = neighbourSolution
                 curScore = neighbourScore
-                iterationCounter = 0
+                stopCounter = 0
             else:
-                iterationCounter += 1
+                stopCounter += 1
+            iterationCounter += 1
+            saveResultCSV(self.csv, iterationCounter, time.time() - startTime, curScore)
 
         self.intersections = curSolution
         return curScore
@@ -59,6 +66,9 @@ class Solution:
         curSolution = copyIntersections(self.intersections)
         iterationSolution = copyIntersections(curSolution)
         curScore = self.simulation.eval(curSolution)
+
+        iterationCounter = 0
+        saveResultCSV(self.csv, 0, 0, curScore)
 
         startTime = time.time()
         while time.time() - startTime < self.maxExecutionTime:
@@ -121,6 +131,8 @@ class Solution:
             if curScore == initialScore:
                 break
             # print("\nSteepest Climb iteration with: ", curScore, " points")
+            iterationCounter += 1
+            saveResultCSV(self.csv, iterationCounter, time.time() - startTime, curScore)
 
         self.intersections = curSolution
         return curScore
@@ -129,6 +141,8 @@ class Solution:
         curSolution = copyIntersections(self.intersections)
         curScore = self.simulation.eval(curSolution)
         iterationCounter = 0
+
+        saveResultCSV(self.csv, 0, 0, curScore)
 
         startTime = time.time()
         while time.time() - startTime < self.maxExecutionTime:
@@ -156,6 +170,8 @@ class Solution:
                     curSolution = neighbourSolution
                     curScore = neighbourScore
 
+            saveResultCSV(self.csv, iterationCounter, time.time() - startTime, curScore)
+
         self.intersections = curSolution
         return curScore
 
@@ -170,6 +186,7 @@ class Solution:
 
         tabuList = [TabuSolution(bestSolution, tenure)]
         iterationCounter = 0
+        saveResultCSV(self.csv, 0, 0, bestScore)
 
         startTime = time.time()
         # max iterations since last improvement
@@ -211,15 +228,23 @@ class Solution:
             tabuList = list(filter(lambda t: t.tenure > 0, tabuList))
             tabuList.append(TabuSolution(candidateSolution, tenure))
 
+            saveResultCSV(self.csv, iterationCounter, time.time() - startTime, bestScore)
+
         self.intersections = bestSolution
         return bestScore
 
-    # Add parameters for configuration
     def generationalGenetic(self, populationSize, maxIter, mutationProb, useRoullete, useUniformCrossover):
         currPopulation = self.getInitPopulation(populationSize)
-        if useRoullete or useUniformCrossover:
-            currPopulationFitness = [
-                self.simulation.eval(sol) for sol in currPopulation]
+        currPopulationFitness = []
+        bestScore = -1
+        bestSolution = currPopulation[0]
+        for sol in currPopulation:
+            eval = self.simulation.eval(sol)
+            currPopulationFitness.append(eval)
+            if eval > bestScore:
+                bestScore = eval
+                bestSolution = sol
+        saveResultCSV(self.csv, 0, 0, bestScore)
 
         startTime = time.time()
         currIter = 0
@@ -228,6 +253,7 @@ class Solution:
                 f"Generational GA iteration {currIter} ({round(time.time()-startTime, 2)} seconds).")
             newPopulation = []
             newPopulationFitness = []
+            newBestScore = -1
             for _ in range(populationSize):
                 if useRoullete:
                     (parent1Idx, parent2Idx) = chooseParentsRoullete(
@@ -248,41 +274,36 @@ class Solution:
                     randomIntersection.randomMutation()
 
                 newPopulation.append(child)
-                if useRoullete or useUniformCrossover:
-                    newPopulationFitness.append(self.simulation.eval(child))
+                childFitness = self.simulation.eval(child)
+                newPopulationFitness.append(childFitness)
+                if childFitness > newBestScore:
+                    newBestScore = childFitness
+                    newBestSolution = child
 
             currPopulation = newPopulation
             currPopulationFitness = newPopulationFitness
-
+            bestScore = newBestScore
+            bestSolution = newBestSolution
             currIter += 1
+            saveResultCSV(self.csv, currIter, time.time() - startTime, bestScore)
 
-        if useRoullete or useUniformCrossover:
-            bestSol = currPopulation[0]
-            bestScore = currPopulationFitness[0]
-            for idx in range(1, len(currPopulation)):
-                if currPopulationFitness[idx] > bestScore:
-                    bestScore = currPopulationFitness[idx]
-                    bestSol = currPopulation[idx]
-        else:
-            bestSol = currPopulation[0]
-            bestScore = self.simulation.eval(bestSol)
-            for solution in currPopulation[1:]:
-                currScore = self.simulation.eval(solution)
-                if currScore > bestScore:
-                    bestScore = currScore
-                    bestSol = solution
-
-        self.intersections = bestSol
+        self.intersections = bestSolution
         return bestScore
 
-    def steadyGenetic(self, populationNum, maxTime, maxIter, mutationProb, useRoullete, useUniformCrossover):
-        currPopulation = self.getInitPopulation(populationNum)
-        currPopulationFitness = [
-            self.simulation.eval(sol) for sol in currPopulation]
+    def steadyGenetic(self, populationSize, maxIter, mutationProb, useRoullete, useUniformCrossover):
+        currPopulation = self.getInitPopulation(populationSize)
+        currPopulationFitness = []
+        bestScore = -1
+        for sol in currPopulation:
+            eval = self.simulation.eval(sol)
+            currPopulationFitness.append(eval)
+            if eval > bestScore:
+                bestScore = eval
+        saveResultCSV(self.csv, 0, 0, bestScore)
 
         startTime = time.time()
         currIter = 0
-        while (time.time() - startTime < maxTime and currIter < maxIter):
+        while (time.time() - startTime < self.maxExecutionTime and currIter < maxIter):
             print(
                 f"Steady GA iteration {currIter} ({round(time.time()-startTime, 2)} seconds).")
             if useRoullete:
@@ -302,8 +323,12 @@ class Solution:
             if random.random() <= mutationProb:
                 randomIntersection = random.choice(child)
                 randomIntersection.randomMutation()
-
+            
             childFitness = self.simulation.eval(child)
+            if childFitness > bestScore:
+                bestScore = childFitness
+            currIter += 1
+            saveResultCSV(self.csv, currIter, time.time() - startTime, bestScore)
 
             minVal = float('inf')
             minIdx = -1
@@ -314,9 +339,7 @@ class Solution:
 
             currPopulationFitness[minIdx] = childFitness
             currPopulation[minIdx] = child
-
-            currIter += 1
-
+        
         bestSol = currPopulation[0]
         bestScore = currPopulationFitness[0]
         for idx in range(1, len(currPopulation)):
@@ -367,3 +390,6 @@ class Solution:
             semString = semString[:-2]  # remove last 2 characters
             semString += "]"
             print(semString)
+
+    def close(self):
+        self.csv.close()

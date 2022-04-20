@@ -53,7 +53,7 @@ def runAlgorithm(algorithmInput):
     solution.show()
     print("Final score = ", finalScore)
     input("Press enter to go back...")
-    writeOutput(OUTPUT_FOLDER + config['outputFile'], solution.intersections)
+    writeOutput(OUTPUT_FOLDER + config['outputFile'] + ".txt", solution.intersections)
 
 
 def program():
