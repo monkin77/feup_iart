@@ -53,9 +53,8 @@ def showAlgorithmMenu():
         4: 'Tabu Search', 
         5: 'Generational Genetic',
         6: 'Steady State Genetic',
-        7: 'Choose another file',
-        8: 'Set General Configurations',
-        9: 'Go to Main Menu',
+        7: 'Set General Configurations',
+        8: 'Go to Main Menu',
     }
     return printMenu(options)
 
@@ -92,8 +91,8 @@ def changeGeneralConfig():
     return configOption
 
 def changeAnnealingConfig():
-    clearScreen()
     while True:
+        clearScreen()
         options = {
             1: f"Set Initial Temperature     ------   {config['initialTemperature']}",
             2: f"Set Cooling alpha Constant  ------   {config['alpha']}",
@@ -130,16 +129,20 @@ def changeCoolingSchedule():
     configOption = printMenu(options)
     if configOption == 1:
         config['coolingSchedule'] = exponentialCooling
+        config['alpha'] = 0.85
     elif configOption == 2:
         config['coolingSchedule'] = logarithmicalCooling
+        config['alpha'] = 1.5
     elif configOption == 3:
         config['coolingSchedule'] = linearCooling
+        config['alpha'] = 1
     elif configOption == 4:
         config['coolingSchedule'] = quadraticCooling
+        config['alpha'] = 1
 
 def changeTabuConfig():
-    clearScreen()
     while True:
+        clearScreen()
         options = {
             1: f"Set Number of Candidates  ------   {config['tabuNumCandidates']}",
             2: "Run Tabu Search",
@@ -156,8 +159,8 @@ def changeTabuConfig():
             changeNumberConfig('tabuNumCandidates')
 
 def changeGeneticConfig():
-    clearScreen()
     while True:
+        clearScreen()
         options = {
             1: f"Set Population Size      ------   {config['populationSize']}",
             2: f"Set Mutation Probability ------   {config['mutationProb']}",
@@ -180,7 +183,7 @@ def changeGeneticConfig():
         if configOption == 1:
             changeNumberConfig('populationSize')
         elif configOption == 2:
-            changeNumberConfig('mutationProb', True)
+            changeNumberConfig('mutationProb', True, 1)
         elif configOption == 3:
             changeBooleanConfig('useRoullete')
         elif configOption == 4:

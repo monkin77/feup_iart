@@ -70,7 +70,7 @@ def program():
             fileOption = showFilesMenu()
             if fileOption == 7:
                 currentMenu = 0
-                continue
+                continueshowAlgorithmMenu
             else:
                 currentMenu = 2
 
@@ -88,15 +88,11 @@ def program():
         elif currentMenu == 3:
             algorithmInput = showAlgorithmMenu()
 
-            # choose another file
-            if algorithmInput == 7:
-                currentMenu = 1
-                continue
             # new configurations
-            elif algorithmInput == 8:
+            if algorithmInput == 7:
                 currentMenu = 2
             # go to main menu
-            elif algorithmInput == 9:
+            elif algorithmInput == 8:
                 currentMenu = 0
                 continue
             else:
