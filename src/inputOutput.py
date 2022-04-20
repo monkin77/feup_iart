@@ -61,3 +61,13 @@ def writeOutput(fileName, intersections):
             f.write(incStreet[0].name + " " + str(incStreet[1]) + "\n")
 
     f.close()
+
+# Prints newlines to simulate clearing console
+
+
+def clearConsole():
+    print('\n'*100)
+
+
+def printColoredText(text):
+    print(f"\033[1;36;40m{text}\033[0;37;40m")
