@@ -70,7 +70,7 @@ def program():
             fileOption = showFilesMenu()
             if fileOption == 7:
                 currentMenu = 0
-                continueshowAlgorithmMenu
+                continue
             else:
                 currentMenu = 2
 
