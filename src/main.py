@@ -4,8 +4,10 @@ from solution.Solution import Solution
 from menus import *
 from config import *
 
+
 def runAlgorithm(algorithmInput):
-    (intersections, cars, maxTime, bonusPoints) = readInput(INPUT_FOLDER + config['inputFile'])
+    (intersections, cars, maxTime, bonusPoints) = readInput(
+        INPUT_FOLDER + config['inputFile'])
     simulation = Simulation(cars, maxTime, bonusPoints)
     solution = Solution(intersections, simulation, config['maxTime'])
 
@@ -19,7 +21,7 @@ def runAlgorithm(algorithmInput):
     elif algorithmInput == 2:
         finalScore = solution.hillClimbingSteepest()
     elif algorithmInput == 3:
-        if changeAnnealingConfig(): # Go back
+        if changeAnnealingConfig():  # Go back
             return
 
         finalScore = solution.simulatedAnnealing(
@@ -29,7 +31,8 @@ def runAlgorithm(algorithmInput):
         if changeTabuConfig():
             return
 
-        finalScore = solution.tabuSearch(config['maxIterations'], config['tabuNumCandidates'])
+        finalScore = solution.tabuSearch(
+            config['maxIterations'], config['tabuNumCandidates'])
     elif algorithmInput == 5:
         if changeGeneticConfig():
             return
@@ -63,7 +66,7 @@ def program():
             showMainMenu()
             currentMenu = 2
 
-        elif currentMenu == 1: # Choose input file
+        elif currentMenu == 1:  # Choose input file
             fileOption = showFilesMenu()
             if fileOption == 7:
                 currentMenu = 0
@@ -72,16 +75,15 @@ def program():
                 currentMenu = 2
 
             config['inputFile'] = files[fileOption]
-        elif currentMenu == 2: # Choose general config
+        elif currentMenu == 2:  # Choose general config
             choice = changeGeneralConfig()
 
-            if choice == 6: # choose algorithm
+            if choice == 6:  # choose algorithm
                 currentMenu = 3
 
-            elif choice == 7: # exit
+            elif choice == 7:  # exit
                 currentMenu = 0
                 continue
-            
 
         elif currentMenu == 3:
             algorithmInput = showAlgorithmMenu()
@@ -99,6 +101,7 @@ def program():
                 continue
             else:
                 runAlgorithm(algorithmInput)
+
 
 if __name__ == "__main__":
     program()

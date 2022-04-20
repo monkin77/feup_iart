@@ -32,7 +32,7 @@ class Solution:
 
     def hillClimbingBasicRandom(self, maxNumIterations):
         curSolution = copyIntersections(self.intersections)
-        curScore = self.simulation.eval2(curSolution)
+        curScore = self.simulation.eval(curSolution)
         iterationCounter = 0
 
         startTime = time.time()
@@ -44,7 +44,7 @@ class Solution:
             for intersection in neighbourSolution:  # Random neighbour
                 intersection.randomMutation()
 
-            neighbourScore = self.simulation.eval2(neighbourSolution)
+            neighbourScore = self.simulation.eval(neighbourSolution)
             if curScore < neighbourScore:
                 curSolution = neighbourSolution
                 curScore = neighbourScore
@@ -58,7 +58,7 @@ class Solution:
     def hillClimbingSteepest(self):
         curSolution = copyIntersections(self.intersections)
         iterationSolution = copyIntersections(curSolution)
-        curScore = self.simulation.eval2(curSolution)
+        curScore = self.simulation.eval(curSolution)
 
         startTime = time.time()
         while time.time() - startTime < self.maxExecutionTime:
@@ -77,7 +77,7 @@ class Solution:
                         intersection = neighbourSolution[intersectionIdx]
 
                         intersection.swapLights(i, j)
-                        neighbourScore = self.simulation.eval2(
+                        neighbourScore = self.simulation.eval(
                             neighbourSolution)
                         if (neighbourScore > curScore):
                             curScore = neighbourScore
@@ -164,7 +164,7 @@ class Solution:
         tenure = startTenure = math.floor(math.sqrt(len(self.intersections)))
 
         bestSolution = copyIntersections(self.intersections)
-        bestScore = self.simulation.eval2(bestSolution)
+        bestScore = self.simulation.eval(bestSolution)
         candidateSolution = copyIntersections(bestSolution)
         candidateScore = bestScore
 
@@ -189,7 +189,7 @@ class Solution:
                 if isTabu:
                     continue
 
-                neighbourScore = self.simulation.eval2(neighbour)
+                neighbourScore = self.simulation.eval(neighbour)
                 if neighbourScore > candidateScore:
                     candidateSolution = neighbour
                     candidateScore = neighbourScore
@@ -219,7 +219,7 @@ class Solution:
         currPopulation = self.getInitPopulation(populationSize)
         if useRoullete or useUniformCrossover:
             currPopulationFitness = [
-                self.simulation.eval2(sol) for sol in currPopulation]
+                self.simulation.eval(sol) for sol in currPopulation]
 
         startTime = time.time()
         currIter = 0
@@ -249,7 +249,7 @@ class Solution:
 
                 newPopulation.append(child)
                 if useRoullete or useUniformCrossover:
-                    newPopulationFitness.append(self.simulation.eval2(child))
+                    newPopulationFitness.append(self.simulation.eval(child))
 
             currPopulation = newPopulation
             currPopulationFitness = newPopulationFitness
@@ -265,9 +265,9 @@ class Solution:
                     bestSol = currPopulation[idx]
         else:
             bestSol = currPopulation[0]
-            bestScore = self.simulation.eval2(bestSol)
+            bestScore = self.simulation.eval(bestSol)
             for solution in currPopulation[1:]:
-                currScore = self.simulation.eval2(solution)
+                currScore = self.simulation.eval(solution)
                 if currScore > bestScore:
                     bestScore = currScore
                     bestSol = solution
@@ -275,16 +275,16 @@ class Solution:
         self.intersections = bestSol
         return bestScore
 
-    def steadyGenetic(self, populationSize, maxIter, mutationProb, useRoullete, useUniformCrossover):
-        currPopulation = self.getInitPopulation(populationSize)
+    def steadyGenetic(self, populationNum, maxTime, maxIter, mutationProb, useRoullete, useUniformCrossover):
+        currPopulation = self.getInitPopulation(populationNum)
         currPopulationFitness = [
-            self.simulation.eval2(sol) for sol in currPopulation]
+            self.simulation.eval(sol) for sol in currPopulation]
 
         startTime = time.time()
         currIter = 0
-        while (time.time() - startTime < self.maxExecutionTime and currIter < maxIter):
+        while (time.time() - startTime < maxTime and currIter < maxIter):
             print(
-                f"Generational GA iteration {currIter} ({round(time.time()-startTime, 2)} seconds).")
+                f"Steady GA iteration {currIter} ({round(time.time()-startTime, 2)} seconds).")
             if useRoullete:
                 (parent1Idx, parent2Idx) = chooseParentsRoullete(
                     currPopulationFitness)
@@ -303,7 +303,7 @@ class Solution:
                 randomIntersection = random.choice(child)
                 randomIntersection.randomMutation()
 
-            childFitness = self.simulation.eval2(child)
+            childFitness = self.simulation.eval(child)
 
             minVal = float('inf')
             minIdx = -1
