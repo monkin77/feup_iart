@@ -15,18 +15,28 @@ def getMenuChoice(minValue, maxValue):
 
     return val
 
-def printMenu(options):
-    print("\n***************************************")
+def printMenu(options, title):
+    print("\n" + title, end="\n\n")
+    print("********************************************************")
     for key, value in options.items():
         print(str(key) + ". " + value)
-    print("***************************************")
+    print("********************************************************")
 
     return getMenuChoice(1, len(options))
 
 # TODO Make this pretty
 def showMainMenu():
-    print("Welcome to the Google Hashcode 2021 Solver!")
-    input("Press enter to start...")
+    print("\
+#######                                          #####                                                \n\
+   #    #####    ##   ###### ###### #  ####     #     # #  ####  #    #   ##   #      # #    #  ####  \n\
+   #    #    #  #  #  #      #      # #    #    #       # #    # ##   #  #  #  #      # ##   # #    # \n\
+   #    #    # #    # #####  #####  # #          #####  # #      # #  # #    # #      # # #  # #      \n\
+   #    #####  ###### #      #      # #               # # #  ### #  # # ###### #      # #  # # #  ### \n\
+   #    #   #  #    # #      #      # #    #    #     # # #    # #   ## #    # #      # #   ## #    # \n\
+   #    #    # #    # #      #      #  ####      #####  #  ####  #    # #    # ###### # #    #  #### \n")
+
+    print("Welcome to the Google Hashcode 2021 Solver, developed for the Artificial Intelligence course")
+    input("Press enter to get started...\n")
 
 def showFilesMenu():
     clearScreen()
@@ -38,7 +48,7 @@ def showFilesMenu():
         5: 'Etoile (E)',
         6: 'Forever jammed (F)',
     }
-    inputOption = printMenu(options)
+    inputOption = printMenu(options, "Choose Input File")
     config['inputFileLabel'] = options[inputOption]
     return inputOption
 
@@ -56,7 +66,7 @@ def showAlgorithmMenu():
         7: 'Set General Configurations',
         8: 'Go to Main Menu',
     }
-    return printMenu(options)
+    return printMenu(options, "Choose Algorithm")
 
 
 def changeGeneralConfig():
@@ -65,14 +75,17 @@ def changeGeneralConfig():
         2: f"Set Output File             ------   {config['outputFile']}",
         3: f"Set Max Num Iterations      ------   {config['maxIterations']}",
         4: f"Set Max Execution Time      ------   {config['maxTime']} secs",
-        5: "Don't Remove Unused Streets"
+        5: "Don't Show Final Solution"
+                if config['showFinalSolution'] else
+            "Show Final Solution",
+        6: "Don't Remove Unused Streets"
                 if config['removeUnusedStreets'] else
             "Remove Unused Streets",
-        6: 'Choose Algorithm',
-        7: 'Go to Main Menu',
+        7: 'Choose Algorithm',
+        8: 'Go to Main Menu',
     }
 
-    configOption = printMenu(options)
+    configOption = printMenu(options, "General Configuration")
     if configOption >= len(options) - 1:
         return configOption
 
@@ -86,6 +99,8 @@ def changeGeneralConfig():
     elif configOption == 4:
         changeNumberConfig('maxTime')
     elif configOption == 5:
+        changeBooleanConfig('showFinalSolution')
+    elif configOption == 6:
         changeBooleanConfig('removeUnusedStreets')
 
     return configOption
@@ -102,7 +117,7 @@ def changeAnnealingConfig():
             6: 'Choose Algorithm',
         }
 
-        configOption = printMenu(options)
+        configOption = printMenu(options, "Configure Simulated Annealing")
         if configOption == len(options) - 1:
             return False # Run Algorithm
         if configOption == len(options):
@@ -126,7 +141,7 @@ def changeCoolingSchedule():
         4: "Quadratic Cooling ( alpha > 0 ) \n T = T0 / (1 + alpha * (k ^ 2)) ",
     }
 
-    configOption = printMenu(options)
+    configOption = printMenu(options, "Choose Cooling Schedule")
     if configOption == 1:
         config['coolingSchedule'] = exponentialCooling
         config['alpha'] = 0.85
@@ -149,7 +164,7 @@ def changeTabuConfig():
             3: 'Choose Algorithm',
         }
 
-        configOption = printMenu(options)
+        configOption = printMenu(options, "Configure Tabu Search")
         if configOption == len(options) - 1:
             return False # Run Algorithm
         if configOption == len(options):
@@ -174,7 +189,7 @@ def changeGeneticConfig():
             6: 'Choose Algorithm',
         }
 
-        configOption = printMenu(options)
+        configOption = printMenu(options, "Configure Genetic Search")
         if configOption == len(options) - 1:
             return False # Run Algorithm
         if configOption == len(options):

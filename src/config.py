@@ -18,6 +18,7 @@ config = {
     'inputFile': 'a.txt',
     'inputFileLabel': 'An example (A)',
     'outputFile': 'out',
+    'showFinalSolution': False,
 
     # General
     'removeUnusedStreets': False,
