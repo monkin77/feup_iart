@@ -15,11 +15,12 @@ def getMenuChoice(minValue, maxValue):
 
     return val
 
-def printMenu(options):
-    print("\n***************************************")
+def printMenu(options, title):
+    print("\n" + title, end="\n\n")
+    print("********************************************************")
     for key, value in options.items():
         print(str(key) + ". " + value)
-    print("***************************************")
+    print("********************************************************")
 
     return getMenuChoice(1, len(options))
 
@@ -38,7 +39,7 @@ def showFilesMenu():
         5: 'Etoile (E)',
         6: 'Forever jammed (F)',
     }
-    inputOption = printMenu(options)
+    inputOption = printMenu(options, "Choose Input File")
     config['inputFileLabel'] = options[inputOption]
     return inputOption
 
@@ -57,7 +58,7 @@ def showAlgorithmMenu():
         8: 'Set General Configurations',
         9: 'Go to Main Menu',
     }
-    return printMenu(options)
+    return printMenu(options, "Choose Algorithm")
 
 
 def changeGeneralConfig():
@@ -73,7 +74,7 @@ def changeGeneralConfig():
         7: 'Go to Main Menu',
     }
 
-    configOption = printMenu(options)
+    configOption = printMenu(options, "General Configuration")
     if configOption >= len(options) - 1:
         return configOption
 
@@ -103,7 +104,7 @@ def changeAnnealingConfig():
             6: 'Choose Algorithm',
         }
 
-        configOption = printMenu(options)
+        configOption = printMenu(options, "Configure Simulated Annealing")
         if configOption == len(options) - 1:
             return False # Run Algorithm
         if configOption == len(options):
@@ -127,7 +128,7 @@ def changeCoolingSchedule():
         4: "Quadratic Cooling ( alpha > 0 ) \n T = T0 / (1 + alpha * (k ^ 2)) ",
     }
 
-    configOption = printMenu(options)
+    configOption = printMenu(options, "Choose Cooling Schedule")
     if configOption == 1:
         config['coolingSchedule'] = exponentialCooling
     elif configOption == 2:
@@ -146,7 +147,7 @@ def changeTabuConfig():
             3: 'Choose Algorithm',
         }
 
-        configOption = printMenu(options)
+        configOption = printMenu(options, "Configure Tabu Search")
         if configOption == len(options) - 1:
             return False # Run Algorithm
         if configOption == len(options):
@@ -171,7 +172,7 @@ def changeGeneticConfig():
             6: 'Choose Algorithm',
         }
 
-        configOption = printMenu(options)
+        configOption = printMenu(options, "Configure Genetic Search")
         if configOption == len(options) - 1:
             return False # Run Algorithm
         if configOption == len(options):
