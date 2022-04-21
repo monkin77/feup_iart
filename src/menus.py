@@ -67,11 +67,14 @@ def changeGeneralConfig():
         2: f"Set Output File             ------   {config['outputFile']}",
         3: f"Set Max Num Iterations      ------   {config['maxIterations']}",
         4: f"Set Max Execution Time      ------   {config['maxTime']} secs",
-        5: "Don't Remove Unused Streets"
+        5: "Don't Show Final Solution"
+                if config['showFinalSolution'] else
+            "Show Final Solution",
+        6: "Don't Remove Unused Streets"
                 if config['removeUnusedStreets'] else
             "Remove Unused Streets",
-        6: 'Choose Algorithm',
-        7: 'Go to Main Menu',
+        7: 'Choose Algorithm',
+        8: 'Go to Main Menu',
     }
 
     configOption = printMenu(options, "General Configuration")
@@ -88,6 +91,8 @@ def changeGeneralConfig():
     elif configOption == 4:
         changeNumberConfig('maxTime')
     elif configOption == 5:
+        changeBooleanConfig('showFinalSolution')
+    elif configOption == 6:
         changeBooleanConfig('removeUnusedStreets')
 
     return configOption

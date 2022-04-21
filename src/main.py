@@ -50,7 +50,9 @@ def runAlgorithm(algorithmInput):
             config['mutationProb'], config['useRoullete'], config['useUniformCrossover']
         )
 
-    solution.show()
+    if (config['showFinalSolution']):
+        solution.show()
+
     print("Final score = ", finalScore)
     input("Press enter to go back...")
     writeOutput(OUTPUT_FOLDER + config['outputFile'] + ".txt", solution.intersections)
@@ -78,10 +80,10 @@ def program():
         elif currentMenu == 2:  # Choose general config
             choice = changeGeneralConfig()
 
-            if choice == 6:  # choose algorithm
+            if choice == 7:  # choose algorithm
                 currentMenu = 3
 
-            elif choice == 7:  # exit
+            elif choice == 8:  # exit
                 currentMenu = 0
                 continue
 
@@ -105,4 +107,4 @@ def program():
 
 if __name__ == "__main__":
     program()
-# melhorar melhorar print inicial, print da solucao e ilegivel
+# melhorar melhorar print inicial
