@@ -1,12 +1,13 @@
 import math
 import random
+import time
+
 from config import *
 from inputOutput import initCSV, saveResultCSV, printColoredText
 from menus import clearScreen
 
 from solution.TabuSolution import TabuSolution
 from Simulation import Simulation
-import time
 
 from solution.geneticUtils import *
 from solution.utils import copyIntersections
@@ -44,7 +45,7 @@ class Solution:
         startTime = time.time()
         while iterationCounter < maxNumIterations and time.time() - startTime < self.maxExecutionTime:
             print(
-                f"Basic Climb iteration {iterationCounter} with: {curScore} points ({round(time.time()-startTime, 2)} seconds)")
+                f"Basic Climb iteration {iterationCounter} with: {curScore} points ({round(time.time()-startTime, 2)} seconds)", end="\r")
             neighbourSolution = copyIntersections(curSolution)
 
             for intersection in neighbourSolution:  # Random neighbour
@@ -74,7 +75,7 @@ class Solution:
         startTime = time.time()
         while time.time() - startTime < self.maxExecutionTime:
             print(
-                f"Steepest Climb iteration with: {curScore} points ({round(time.time()-startTime, 2)} seconds)")
+                f"Steepest Climb iteration {iterationCounter} with: {curScore} points ({round(time.time()-startTime, 2)} seconds)", end="\r")
 
             initialScore = curScore
 
@@ -149,7 +150,7 @@ class Solution:
         while time.time() - startTime < self.maxExecutionTime:
             temperature = coolingSchedule(t0, alpha, iterationCounter)
             print(
-                f"Simulated Annealing iteration at {round(temperature, precision)}º with: {curScore} points ({round(time.time()-startTime, 2)} seconds)")
+                f"Simulated Annealing iteration {iterationCounter} at {round(temperature, precision)}º with: {curScore} points ({round(time.time()-startTime, 2)} seconds)", end="\r")
             if round(temperature, precision) == 0:
                 break
             iterationCounter += 1
@@ -187,6 +188,7 @@ class Solution:
 
         tabuList = [TabuSolution(bestSolution, tenure)]
         iterationCounter = 0
+        generalCounter = 0
         saveResultCSV(self.csv, 0, 0, bestScore)
 
         startTime = time.time()
@@ -194,7 +196,7 @@ class Solution:
         while iterationCounter <= maxIter and time.time() - startTime < self.maxExecutionTime:
             # print("score", bestScore, "iter", iterationCounter, "tenure", tenure)
             print(
-                f"Tabu Search iteration {iterationCounter} with: {bestScore} points ({round(time.time()-startTime, 2)} seconds). Tenure = {tenure}")
+                f"Tabu Search iteration {generalCounter} with: {bestScore} points ({round(time.time()-startTime, 2)} seconds). Tenure = {tenure}", end="\r")
             neighbourhood = self.getCandidates(
                 candidateSolution, candidateListSize)
             for neighbour in neighbourhood:
@@ -229,7 +231,8 @@ class Solution:
             tabuList = list(filter(lambda t: t.tenure > 0, tabuList))
             tabuList.append(TabuSolution(candidateSolution, tenure))
 
-            saveResultCSV(self.csv, iterationCounter, time.time() - startTime, bestScore)
+            generalCounter += 1
+            saveResultCSV(self.csv, generalCounter, time.time() - startTime, bestScore)
 
         self.intersections = bestSolution
         return bestScore
@@ -250,8 +253,7 @@ class Solution:
         startTime = time.time()
         currIter = 0
         while (time.time() - startTime < self.maxExecutionTime and currIter < maxIter):
-            print(
-                f"Generational GA iteration {currIter} with: {bestScore} points ({round(time.time()-startTime, 2)} seconds).")
+            print(f"Generational GA iteration {currIter} with: {bestScore} points ({round(time.time()-startTime, 2)} seconds).", end="\r")
             newPopulation = []
             newPopulationFitness = []
             newBestScore = -1
@@ -305,8 +307,8 @@ class Solution:
         startTime = time.time()
         currIter = 0
         while (time.time() - startTime < self.maxExecutionTime and currIter < maxIter):
-            print(
-                f"Steady GA iteration {currIter} with: {bestScore} points ({round(time.time()-startTime, 2)} seconds).")
+            print(f"Steady GA iteration {currIter} with: {bestScore} points ({round(time.time()-startTime, 2)} seconds).", end="\r")
+
             if useRoullete:
                 (parent1Idx, parent2Idx) = chooseParentsRoullete(
                     currPopulationFitness)
@@ -365,8 +367,7 @@ class Solution:
             newCandidate = copyIntersections(clearIntersections)
             for intersection in newCandidate:
                 for idx in range(len(intersection.incomingStreets)):
-                    intersection.changeLightTime(
-                        idx, random.randint(0, self.simulation.maxTime / 2))
+                    intersection.changeLightTime(idx, random.randint(0, int(math.sqrt(self.simulation.maxTime)) ) )
 
             initPopulation.append(newCandidate)
 
