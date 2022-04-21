@@ -26,8 +26,17 @@ def printMenu(options, title):
 
 # TODO Make this pretty
 def showMainMenu():
-    print("Welcome to the Google Hashcode 2021 Solver!")
-    input("Press enter to start...")
+    print("\
+#######                                          #####                                                \n\
+   #    #####    ##   ###### ###### #  ####     #     # #  ####  #    #   ##   #      # #    #  ####  \n\
+   #    #    #  #  #  #      #      # #    #    #       # #    # ##   #  #  #  #      # ##   # #    # \n\
+   #    #    # #    # #####  #####  # #          #####  # #      # #  # #    # #      # # #  # #      \n\
+   #    #####  ###### #      #      # #               # # #  ### #  # # ###### #      # #  # # #  ### \n\
+   #    #   #  #    # #      #      # #    #    #     # # #    # #   ## #    # #      # #   ## #    # \n\
+   #    #    # #    # #      #      #  ####      #####  #  ####  #    # #    # ###### # #    #  #### \n")
+
+    print("Welcome to the Google Hashcode 2021 Solver, developed for the Artificial Intelligence course")
+    input("Press enter to get started...\n")
 
 def showFilesMenu():
     clearScreen()
