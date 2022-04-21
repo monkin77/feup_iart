@@ -75,7 +75,7 @@ class Solution:
         startTime = time.time()
         while time.time() - startTime < self.maxExecutionTime:
             print(
-                f"Steepest Climb iteration with: {curScore} points ({round(time.time()-startTime, 2)} seconds)", end="\r")
+                f"Steepest Climb iteration {iterationCounter} with: {curScore} points ({round(time.time()-startTime, 2)} seconds)", end="\r")
 
             initialScore = curScore
 
@@ -150,7 +150,7 @@ class Solution:
         while time.time() - startTime < self.maxExecutionTime:
             temperature = coolingSchedule(t0, alpha, iterationCounter)
             print(
-                f"Simulated Annealing iteration at {round(temperature, precision)}º with: {curScore} points ({round(time.time()-startTime, 2)} seconds)", end="\r")
+                f"Simulated Annealing iteration {iterationCounter} at {round(temperature, precision)}º with: {curScore} points ({round(time.time()-startTime, 2)} seconds)", end="\r")
             if round(temperature, precision) == 0:
                 break
             iterationCounter += 1
@@ -188,6 +188,7 @@ class Solution:
 
         tabuList = [TabuSolution(bestSolution, tenure)]
         iterationCounter = 0
+        generalCounter = 0
         saveResultCSV(self.csv, 0, 0, bestScore)
 
         startTime = time.time()
@@ -195,7 +196,7 @@ class Solution:
         while iterationCounter <= maxIter and time.time() - startTime < self.maxExecutionTime:
             # print("score", bestScore, "iter", iterationCounter, "tenure", tenure)
             print(
-                f"Tabu Search iteration {iterationCounter} with: {bestScore} points ({round(time.time()-startTime, 2)} seconds). Tenure = {tenure}", end="\r")
+                f"Tabu Search iteration {generalCounter} with: {bestScore} points ({round(time.time()-startTime, 2)} seconds). Tenure = {tenure}", end="\r")
             neighbourhood = self.getCandidates(
                 candidateSolution, candidateListSize)
             for neighbour in neighbourhood:
@@ -230,7 +231,8 @@ class Solution:
             tabuList = list(filter(lambda t: t.tenure > 0, tabuList))
             tabuList.append(TabuSolution(candidateSolution, tenure))
 
-            saveResultCSV(self.csv, iterationCounter, time.time() - startTime, bestScore)
+            generalCounter += 1
+            saveResultCSV(self.csv, generalCounter, time.time() - startTime, bestScore)
 
         self.intersections = bestSolution
         return bestScore
