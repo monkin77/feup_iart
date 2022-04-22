@@ -70,7 +70,7 @@ def program():
 
         elif currentMenu == 1:  # Choose input file
             fileOption = showFilesMenu()
-            if fileOption == 7:
+            if fileOption == 8:
                 currentMenu = 0
                 continue
             else:
