@@ -179,9 +179,9 @@ def changeGeneticConfig():
         options = {
             1: f"Set Population Size      ------   {config['populationSize']}",
             2: f"Set Mutation Probability ------   {config['mutationProb']}",
-            3: f"Use Random Selection     ------   Currently Using Roullete Selection"
-                    if config['useRoullete'] else
-                f"Use Roullete Selection   ------   Currently Using Random Selection",
+            3: f"Use Random Selection     ------   Currently Using Roulette Selection"
+                    if config['useRoulette'] else
+                f"Use Roulette Selection   ------   Currently Using Random Selection",
             4: f"Use Order Base Crossover ------   Currently Using Uniform Crossover"
                     if config['useUniformCrossover'] else
                 f"Use Uniform Crossover    ------   Currently Using Order Base Crossover",
@@ -200,7 +200,7 @@ def changeGeneticConfig():
         elif configOption == 2:
             changeNumberConfig('mutationProb', True, 1)
         elif configOption == 3:
-            changeBooleanConfig('useRoullete')
+            changeBooleanConfig('useRoulette')
         elif configOption == 4:
             changeBooleanConfig('useUniformCrossover')
 

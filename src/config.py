@@ -37,7 +37,7 @@ config = {
     # Genetic
     'populationSize': 8,
     'mutationProb': 0.05,
-    'useRoullete': True,
+    'useRoulette': True,
     'useUniformCrossover': True,
 }
 

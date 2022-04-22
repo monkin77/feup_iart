@@ -39,7 +39,7 @@ def runAlgorithm(algorithmInput):
 
         finalScore = solution.generationalGenetic(
             config['populationSize'], config['maxIterations'], config['mutationProb'],
-            config['useRoullete'], config['useUniformCrossover']
+            config['useRoulette'], config['useUniformCrossover']
         )
     elif algorithmInput == 6:
         if changeGeneticConfig():
@@ -47,7 +47,7 @@ def runAlgorithm(algorithmInput):
 
         finalScore = solution.steadyGenetic(
             config['populationSize'], config['maxIterations'],
-            config['mutationProb'], config['useRoullete'], config['useUniformCrossover']
+            config['mutationProb'], config['useRoulette'], config['useUniformCrossover']
         )
 
     if (config['showFinalSolution']):

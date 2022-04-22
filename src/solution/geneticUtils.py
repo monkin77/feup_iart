@@ -22,7 +22,7 @@ def uniformCrossover(parent1Idx, parent2Idx, currPopulationFitness, currPopulati
 def chooseParentsRandom(populationNum):
     return (random.randint(populationNum - 1), random.randint(populationNum - 1))
 
-def chooseParentsRoullete(currPopulationFitness):
+def chooseParentsRoulette(currPopulationFitness):
     sumFitness = sum(currPopulationFitness)
 
     randomProb = random.random()
