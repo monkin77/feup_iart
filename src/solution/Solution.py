@@ -199,20 +199,22 @@ class Solution:
                 f"Tabu Search iteration {generalCounter} with: {bestScore} points ({round(time.time()-startTime, 2)} seconds). Tenure = {tenure}", end="\r")
             neighbourhood = self.getCandidates(
                 candidateSolution, candidateListSize)
+
+            selectFirstNeighbour = True
             for neighbour in neighbourhood:
                 isTabu = False
                 for tabu in tabuList:
                     if tabu.isSolutionTabu(neighbour):
-                        # print("Tabu!")
                         isTabu = True
                         break
                 if isTabu:
                     continue
 
                 neighbourScore = self.simulation.eval(neighbour)
-                if neighbourScore > candidateScore:
+                if selectFirstNeighbour or neighbourScore > candidateScore:
                     candidateSolution = neighbour
                     candidateScore = neighbourScore
+                    selectFirstNeighbour = False
 
             if candidateScore > bestScore:
                 bestSolution = candidateSolution
