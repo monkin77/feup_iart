@@ -239,7 +239,7 @@ class Solution:
         self.intersections = bestSolution
         return bestScore
 
-    def generationalGenetic(self, populationSize, maxIter, mutationProb, useRoullete, useUniformCrossover):
+    def generationalGenetic(self, populationSize, maxIter, mutationProb, useRoulette, useUniformCrossover):
         currPopulation = self.getInitPopulation(populationSize)
         currPopulationFitness = []
         bestScore = -1
@@ -260,8 +260,8 @@ class Solution:
             newPopulationFitness = []
             newBestScore = -1
             for _ in range(populationSize):
-                if useRoullete:
-                    (parent1Idx, parent2Idx) = chooseParentsRoullete(
+                if useRoulette:
+                    (parent1Idx, parent2Idx) = chooseParentsRoulette(
                         currPopulationFitness)
                 else:
                     (parent1Idx, parent2Idx) = chooseParentsRandom(populationSize)
@@ -295,7 +295,7 @@ class Solution:
         self.intersections = bestSolution
         return bestScore
 
-    def steadyGenetic(self, populationSize, maxIter, mutationProb, useRoullete, useUniformCrossover):
+    def steadyGenetic(self, populationSize, maxIter, mutationProb, useRoulette, useUniformCrossover):
         currPopulation = self.getInitPopulation(populationSize)
         currPopulationFitness = []
         bestScore = -1
@@ -311,8 +311,8 @@ class Solution:
         while (time.time() - startTime < self.maxExecutionTime and currIter < maxIter):
             print(f"Steady GA iteration {currIter} with: {bestScore} points ({round(time.time()-startTime, 2)} seconds).", end="\r")
 
-            if useRoullete:
-                (parent1Idx, parent2Idx) = chooseParentsRoullete(
+            if useRoulette:
+                (parent1Idx, parent2Idx) = chooseParentsRoulette(
                     currPopulationFitness)
             else:
                 (parent1Idx, parent2Idx) = chooseParentsRandom(populationSize)
