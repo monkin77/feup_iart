@@ -55,7 +55,9 @@ def runAlgorithm(algorithmInput):
 
     print("Final score = ", finalScore)
     input("Press enter to go back...")
-    writeOutput(OUTPUT_FOLDER + config['outputFile'] + ".txt", solution.intersections)
+    writeOutput(OUTPUT_FOLDER +
+                config['outputFile'] + ".txt", solution.intersections)
+    solution.close()
 
 
 def program():

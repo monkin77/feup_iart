@@ -1,8 +1,8 @@
 from solution.coolingSchedule import *
 from math import inf
 
-INPUT_FOLDER = "input/"
-OUTPUT_FOLDER = "output/"
+INPUT_FOLDER = "../input/"
+OUTPUT_FOLDER = "../output/"
 
 files = {
     1: 'a.txt',
@@ -12,6 +12,7 @@ files = {
     5: 'e.txt',
     6: 'f.txt',
     7: 'custom1.txt',
+    8: 'custom2.txt',
 }
 
 config = {
@@ -42,29 +43,36 @@ config = {
     'useUniformCrossover': True,
 }
 
+
 def changeBooleanConfig(key):
     config[key] = not config[key]
 
-def changeNumberConfig(key, isFloat = False, maxValue=inf):
+
+def changeNumberConfig(key, isFloat=False, maxValue=inf):
     newNumber = getNumberInput(0, isFloat, maxValue)
     config[key] = newNumber
+
 
 def changeOutputFile():
     userInput = input("Insert the output file's name: ")
     config['outputFile'] = userInput
 
-def getNumberInput(minValue,  isFloat, maxValue = inf):
+
+def getNumberInput(minValue,  isFloat, maxValue=inf):
     userInput = input("Insert new value: ")
     while True:
         try:
             val = float(userInput) if isFloat else int(userInput)
             if val < minValue:
-                userInput = input("Invalid new value, please insert a number above " + str(minValue) + ": ")
+                userInput = input(
+                    "Invalid new value, please insert a number above " + str(minValue) + ": ")
             elif val > maxValue:
-                userInput = input("Invalid new value, please insert a number below " + str(maxValue) + ": ")
+                userInput = input(
+                    "Invalid new value, please insert a number below " + str(maxValue) + ": ")
             else:
                 break
         except ValueError:
-            userInput = input("Invalid new value, please insert a valid number: ")
+            userInput = input(
+                "Invalid new value, please insert a valid number: ")
 
     return val

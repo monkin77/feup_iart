@@ -1,19 +1,22 @@
 import os
 from config import *
 
+
 def getMenuChoice(minValue, maxValue):
     userInput = input("Insert option from the menu: ")
     while True:
         try:
             val = int(userInput)
             if val < minValue or val > maxValue:
-                userInput = input("Invalid option, please insert a valid one: ")
+                userInput = input(
+                    "Invalid option, please insert a valid one: ")
             else:
                 break
         except ValueError:
             userInput = input("Invalid option, please insert a valid one: ")
 
     return val
+
 
 def printMenu(options, title):
     print("\n" + title, end="\n\n")
@@ -25,6 +28,8 @@ def printMenu(options, title):
     return getMenuChoice(1, len(options))
 
 # TODO Make this pretty
+
+
 def showMainMenu():
     print("\
 #######                                          #####                                                \n\
@@ -38,6 +43,7 @@ def showMainMenu():
     print("Welcome to the Google Hashcode 2021 Solver, developed for the Artificial Intelligence course")
     input("Press enter to get started...\n")
 
+
 def showFilesMenu():
     clearScreen()
     options = {
@@ -48,20 +54,23 @@ def showFilesMenu():
         5: 'Etoile (E)',
         6: 'Forever jammed (F)',
         7: 'Custom Input 1',
+        8: 'Custom Input 2',
     }
     inputOption = printMenu(options, "Choose Input File")
     config['inputFileLabel'] = options[inputOption]
     return inputOption
 
+
 def getOption(options, input):
     return options[input]
 
+
 def showAlgorithmMenu():
     options = {
-        1: 'Hill Climbing Basic Random', 
-        2: 'Hill Climbing Steepest Ascent', 
-        3: 'Simulated Annealing', 
-        4: 'Tabu Search', 
+        1: 'Hill Climbing Basic Random',
+        2: 'Hill Climbing Steepest Ascent',
+        3: 'Simulated Annealing',
+        4: 'Tabu Search',
         5: 'Generational Genetic',
         6: 'Steady State Genetic',
         7: 'Set General Configurations',
@@ -77,11 +86,11 @@ def changeGeneralConfig():
         3: f"Set Max Num Iterations      ------   {config['maxIterations']}",
         4: f"Set Max Execution Time      ------   {config['maxTime']} secs",
         5: "Don't Show Final Solution"
-                if config['showFinalSolution'] else
-            "Show Final Solution",
+        if config['showFinalSolution'] else
+        "Show Final Solution",
         6: "Don't Remove Unused Streets"
-                if config['removeUnusedStreets'] else
-            "Remove Unused Streets",
+        if config['removeUnusedStreets'] else
+        "Remove Unused Streets",
         7: 'Choose Algorithm',
         8: 'Go to Main Menu',
     }
@@ -106,6 +115,7 @@ def changeGeneralConfig():
 
     return configOption
 
+
 def changeAnnealingConfig():
     while True:
         clearScreen()
@@ -120,9 +130,9 @@ def changeAnnealingConfig():
 
         configOption = printMenu(options, "Configure Simulated Annealing")
         if configOption == len(options) - 1:
-            return False # Run Algorithm
+            return False  # Run Algorithm
         if configOption == len(options):
-            return True # Go back
+            return True  # Go back
 
         if configOption == 1:
             changeNumberConfig('initialTemperature')
@@ -132,6 +142,7 @@ def changeAnnealingConfig():
             changeNumberConfig('precision')
         elif configOption == 4:
             changeCoolingSchedule()
+
 
 def changeCoolingSchedule():
     clearScreen()
@@ -156,6 +167,7 @@ def changeCoolingSchedule():
         config['coolingSchedule'] = quadraticCooling
         config['alpha'] = 1
 
+
 def changeTabuConfig():
     while True:
         clearScreen()
@@ -167,12 +179,13 @@ def changeTabuConfig():
 
         configOption = printMenu(options, "Configure Tabu Search")
         if configOption == len(options) - 1:
-            return False # Run Algorithm
+            return False  # Run Algorithm
         if configOption == len(options):
-            return True # Go back
+            return True  # Go back
 
         if configOption == 1:
             changeNumberConfig('tabuNumCandidates')
+
 
 def changeGeneticConfig():
     while True:
@@ -184,17 +197,17 @@ def changeGeneticConfig():
                     if config['useRoulette'] else
                 f"Use Roulette Selection   ------   Currently Using Random Selection",
             4: f"Use Order Base Crossover ------   Currently Using Uniform Crossover"
-                    if config['useUniformCrossover'] else
-                f"Use Uniform Crossover    ------   Currently Using Order Base Crossover",
+            if config['useUniformCrossover'] else
+            f"Use Uniform Crossover    ------   Currently Using Order Base Crossover",
             5: "Run Genetic Algorithm",
             6: 'Choose Algorithm',
         }
 
         configOption = printMenu(options, "Configure Genetic Search")
         if configOption == len(options) - 1:
-            return False # Run Algorithm
+            return False  # Run Algorithm
         if configOption == len(options):
-            return True # Go back
+            return True  # Go back
 
         if configOption == 1:
             changeNumberConfig('populationSize')
@@ -204,6 +217,7 @@ def changeGeneticConfig():
             changeBooleanConfig('useRoulette')
         elif configOption == 4:
             changeBooleanConfig('useUniformCrossover')
+
 
 def clearScreen():
     os.system('cls' if os.name == 'nt' else 'clear')
