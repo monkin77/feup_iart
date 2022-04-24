@@ -1,22 +1,19 @@
 import os
 from config import *
 
-
 def getMenuChoice(minValue, maxValue):
     userInput = input("Insert option from the menu: ")
     while True:
         try:
             val = int(userInput)
             if val < minValue or val > maxValue:
-                userInput = input(
-                    "Invalid option, please insert a valid one: ")
+                userInput = input("Invalid option, please insert a valid one: ")
             else:
                 break
         except ValueError:
             userInput = input("Invalid option, please insert a valid one: ")
 
     return val
-
 
 def printMenu(options, title):
     print("\n" + title, end="\n\n")
@@ -26,9 +23,6 @@ def printMenu(options, title):
     print("********************************************************")
 
     return getMenuChoice(1, len(options))
-
-# TODO Make this pretty
-
 
 def showMainMenu():
     print("\
@@ -42,7 +36,6 @@ def showMainMenu():
 
     print("Welcome to the Google Hashcode 2021 Solver, developed for the Artificial Intelligence course")
     input("Press enter to get started...\n")
-
 
 def showFilesMenu():
     clearScreen()
@@ -60,10 +53,8 @@ def showFilesMenu():
     config['inputFileLabel'] = options[inputOption]
     return inputOption
 
-
 def getOption(options, input):
     return options[input]
-
 
 def showAlgorithmMenu():
     options = {
@@ -77,7 +68,6 @@ def showAlgorithmMenu():
         8: 'Go to Main Menu',
     }
     return printMenu(options, "Choose Algorithm")
-
 
 def changeGeneralConfig():
     options = {
@@ -115,7 +105,6 @@ def changeGeneralConfig():
 
     return configOption
 
-
 def changeAnnealingConfig():
     while True:
         clearScreen()
@@ -143,7 +132,6 @@ def changeAnnealingConfig():
         elif configOption == 4:
             changeCoolingSchedule()
 
-
 def changeCoolingSchedule():
     clearScreen()
     options = {
@@ -167,7 +155,6 @@ def changeCoolingSchedule():
         config['coolingSchedule'] = quadraticCooling
         config['alpha'] = 1
 
-
 def changeTabuConfig():
     while True:
         clearScreen()
@@ -185,7 +172,6 @@ def changeTabuConfig():
 
         if configOption == 1:
             changeNumberConfig('tabuNumCandidates')
-
 
 def changeGeneticConfig():
     while True:
@@ -217,7 +203,6 @@ def changeGeneticConfig():
             changeBooleanConfig('useRoulette')
         elif configOption == 4:
             changeBooleanConfig('useUniformCrossover')
-
 
 def clearScreen():
     os.system('cls' if os.name == 'nt' else 'clear')

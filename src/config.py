@@ -1,8 +1,8 @@
 from solution.coolingSchedule import *
 from math import inf
 
-INPUT_FOLDER = "../input/"
-OUTPUT_FOLDER = "../output/"
+INPUT_FOLDER = "input/"
+OUTPUT_FOLDER = "output/"
 
 files = {
     1: 'a.txt',
