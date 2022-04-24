@@ -47,6 +47,7 @@ def showFilesMenu():
         4: 'Daily commute (D)',
         5: 'Etoile (E)',
         6: 'Forever jammed (F)',
+        7: 'Custom Input 1',
     }
     inputOption = printMenu(options, "Choose Input File")
     config['inputFileLabel'] = options[inputOption]

@@ -11,6 +11,7 @@ files = {
     4: 'd.txt',
     5: 'e.txt',
     6: 'f.txt',
+    7: 'custom1.txt',
 }
 
 config = {
