@@ -105,4 +105,3 @@ def program():
 
 if __name__ == "__main__":
     program()
-# melhorar melhorar print inicial

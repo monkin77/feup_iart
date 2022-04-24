@@ -95,7 +95,6 @@ class Solution:
                             curScore = neighbourScore
                             curSolution = neighbourSolution
 
-            # Maybe change only one position at random, for efficiency
             # Tries to find the best swap to the current iteration solution
             for intersectionIdx in range(len(iterationSolution)):
                 iterIntersection = iterationSolution[intersectionIdx]
@@ -132,7 +131,7 @@ class Solution:
             iterationSolution = curSolution
             if curScore == initialScore:
                 break
-            # print("\nSteepest Climb iteration with: ", curScore, " points")
+
             iterationCounter += 1
             saveResultCSV(self.csv, iterationCounter, time.time() - startTime, curScore)
 
@@ -194,7 +193,6 @@ class Solution:
         startTime = time.time()
         # max iterations since last improvement
         while iterationCounter <= maxIter and time.time() - startTime < self.maxExecutionTime:
-            # print("score", bestScore, "iter", iterationCounter, "tenure", tenure)
             print(
                 f"Tabu Search iteration {generalCounter} with: {bestScore} points ({round(time.time()-startTime, 2)} seconds). Tenure = {tenure}", end="\r")
             neighbourhood = self.getCandidates(

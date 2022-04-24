@@ -73,7 +73,7 @@ class Simulation:
                                 if car.id == carId:
                                     waitingQueue.pop(0)
                                     changedIntersections[currIntersection.id] = True
-                                    # print("Car", car.id, "went through street", currStreet.name, " at ", second)
+
                                     car.currStreet += 1
                                     car.remainingCrossingTime = car.streets[car.currStreet].timeToCross - 1
 
