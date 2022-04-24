@@ -24,7 +24,6 @@ def printMenu(options, title):
 
     return getMenuChoice(1, len(options))
 
-# TODO Make this pretty
 def showMainMenu():
     print("\
 #######                                          #####                                                \n\
@@ -48,6 +47,7 @@ def showFilesMenu():
         5: 'Etoile (E)',
         6: 'Forever jammed (F)',
         7: 'Custom Input 1',
+        8: 'Custom Input 2',
     }
     inputOption = printMenu(options, "Choose Input File")
     config['inputFileLabel'] = options[inputOption]
@@ -58,17 +58,16 @@ def getOption(options, input):
 
 def showAlgorithmMenu():
     options = {
-        1: 'Hill Climbing Basic Random', 
-        2: 'Hill Climbing Steepest Ascent', 
-        3: 'Simulated Annealing', 
-        4: 'Tabu Search', 
+        1: 'Hill Climbing Basic Random',
+        2: 'Hill Climbing Steepest Ascent',
+        3: 'Simulated Annealing',
+        4: 'Tabu Search',
         5: 'Generational Genetic',
         6: 'Steady State Genetic',
         7: 'Set General Configurations',
         8: 'Go to Main Menu',
     }
     return printMenu(options, "Choose Algorithm")
-
 
 def changeGeneralConfig():
     options = {
@@ -77,11 +76,11 @@ def changeGeneralConfig():
         3: f"Set Max Num Iterations      ------   {config['maxIterations']}",
         4: f"Set Max Execution Time      ------   {config['maxTime']} secs",
         5: "Don't Show Final Solution"
-                if config['showFinalSolution'] else
-            "Show Final Solution",
+        if config['showFinalSolution'] else
+        "Show Final Solution",
         6: "Don't Remove Unused Streets"
-                if config['removeUnusedStreets'] else
-            "Remove Unused Streets",
+        if config['removeUnusedStreets'] else
+        "Remove Unused Streets",
         7: 'Choose Algorithm',
         8: 'Go to Main Menu',
     }
@@ -120,9 +119,9 @@ def changeAnnealingConfig():
 
         configOption = printMenu(options, "Configure Simulated Annealing")
         if configOption == len(options) - 1:
-            return False # Run Algorithm
+            return False  # Run Algorithm
         if configOption == len(options):
-            return True # Go back
+            return True  # Go back
 
         if configOption == 1:
             changeNumberConfig('initialTemperature')
@@ -167,9 +166,9 @@ def changeTabuConfig():
 
         configOption = printMenu(options, "Configure Tabu Search")
         if configOption == len(options) - 1:
-            return False # Run Algorithm
+            return False  # Run Algorithm
         if configOption == len(options):
-            return True # Go back
+            return True  # Go back
 
         if configOption == 1:
             changeNumberConfig('tabuNumCandidates')
@@ -184,17 +183,17 @@ def changeGeneticConfig():
                     if config['useRoulette'] else
                 f"Use Roulette Selection   ------   Currently Using Random Selection",
             4: f"Use Order Base Crossover ------   Currently Using Uniform Crossover"
-                    if config['useUniformCrossover'] else
-                f"Use Uniform Crossover    ------   Currently Using Order Base Crossover",
+            if config['useUniformCrossover'] else
+            f"Use Uniform Crossover    ------   Currently Using Order Base Crossover",
             5: "Run Genetic Algorithm",
             6: 'Choose Algorithm',
         }
 
         configOption = printMenu(options, "Configure Genetic Search")
         if configOption == len(options) - 1:
-            return False # Run Algorithm
+            return False  # Run Algorithm
         if configOption == len(options):
-            return True # Go back
+            return True  # Go back
 
         if configOption == 1:
             changeNumberConfig('populationSize')

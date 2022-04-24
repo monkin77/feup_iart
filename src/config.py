@@ -12,6 +12,7 @@ files = {
     5: 'e.txt',
     6: 'f.txt',
     7: 'custom1.txt',
+    8: 'custom2.txt',
 }
 
 config = {
@@ -45,7 +46,7 @@ config = {
 def changeBooleanConfig(key):
     config[key] = not config[key]
 
-def changeNumberConfig(key, isFloat = False, maxValue=inf):
+def changeNumberConfig(key, isFloat=False, maxValue=inf):
     newNumber = getNumberInput(0, isFloat, maxValue)
     config[key] = newNumber
 
@@ -53,7 +54,7 @@ def changeOutputFile():
     userInput = input("Insert the output file's name: ")
     config['outputFile'] = userInput
 
-def getNumberInput(minValue,  isFloat, maxValue = inf):
+def getNumberInput(minValue,  isFloat, maxValue=inf):
     userInput = input("Insert new value: ")
     while True:
         try:
